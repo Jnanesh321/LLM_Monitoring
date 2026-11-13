@@ -1,0 +1,113 @@
+{
+  "meta": {
+    "plan_name": "ps03_head_to_head_trial_execution_plan",
+    "version": "1.1.0",
+    "warmup_runs_per_engine": 5,
+    "measured_baseline_profiling_trials_per_engine": 20,
+    "negative_control_trials_per_engine": 20,
+    "experiment_count": 5,
+    "trials_per_experiment": 20,
+    "total_measured_trials_per_engine": 120,
+    "total_measured_trials_combined": 240,
+    "probes_per_trial": 16
+  },
+  "phases": [
+    {
+      "phase_index": 1,
+      "phase_name": "Warmup and Runtime Stabilization",
+      "runs": 5,
+      "purpose": "Warm up language runtimes, OS page caches, and HTTP clients.",
+      "scoring_included": false
+    },
+    {
+      "phase_index": 2,
+      "phase_name": "Baseline Empirical Distribution Profiling",
+      "trials": 20,
+      "purpose": "Establish separate normal baseline distributions (mu_base, sigma_base) for Go and Python across all 16 probes. These 20 runs are strictly dedicated to baseline calibration and never reused for scoring false positives.",
+      "scoring_included": false,
+      "recorded_metrics": [
+        "mean_accuracy",
+        "category_accuracy",
+        "p50_latency",
+        "p95_latency",
+        "refusal_rate",
+        "valid_json_rate",
+        "token_counts"
+      ]
+    },
+    {
+      "phase_index": 3,
+      "phase_name": "Controlled Head-to-Head Mutation Trials (Phase 3)",
+      "trials_per_scenario": 20,
+      "scenarios": [
+        "EXP-00",
+        "EXP-01",
+        "EXP-02",
+        "EXP-03",
+        "EXP-04"
+      ],
+      "total_candidate_trials": 100,
+      "baseline_isolation": "EXP-00 negative control runs are 20 completely unseen trials, evaluated against Phase 2 baseline distributions to rigorously test FPR.",
+      "ground_truth_isolation_protocol": "Unlabeled observation vectors passed to detectors; predictions sealed before ground truth evaluation.",
+      "paired_jitter_array_ms": [
+        -3.6,
+        -4.32,
+        -2.78,
+        17.55,
+        -3.19,
+        -37.43,
+        8.31,
+        -6.68,
+        -5.42,
+        2.9,
+        5.81,
+        29.09,
+        16.42,
+        2.76,
+        -18.46,
+        -25.37,
+        6.16,
+        32.78,
+        1.04,
+        -2.66
+      ],
+      "scoring_included": true
+    }
+  ],
+  "metric_evaluation_rules": {
+    "detection": {
+      "positive_scenarios": [
+        "EXP-01",
+        "EXP-02",
+        "EXP-03",
+        "EXP-04"
+      ],
+      "negative_scenarios": [
+        "EXP-00"
+      ],
+      "counts": [
+        "TP",
+        "FP",
+        "TN",
+        "FN"
+      ],
+      "derived_metrics": [
+        "Precision",
+        "Recall",
+        "F1",
+        "FPR",
+        "FNR",
+        "Detection_Rate"
+      ]
+    },
+    "attribution": {
+      "evaluation_scope": "Evaluated strictly on detected positive mutations (TP subset)",
+      "categories": [
+        "Correct_Attribution",
+        "Wrong_Attribution",
+        "Inconclusive_Attribution"
+      ],
+      "accuracy_formula": "Correct_Attribution / Total_Detected_Positive_Mutations"
+    }
+  }
+}

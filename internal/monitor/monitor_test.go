@@ -95,3 +95,151 @@ func TestAliasRejectsRealUserPrompt(t *testing.T) {
 		t.Fatalf("real prompt was accepted with status %d", response.StatusCode)
 	}
 }
+
+func TestTruncationAttributionObservableEvidence(t *testing.T) {
+	reference := []Observation{
+		{
+			CanaryID:     "TRN-E1",
+			Response:     "Monday\nTuesday\nWednesday\nThursday\nFriday\nSaturday\nSunday\n<<END>>",
+			FinishReason: "stop",
+			OutputTokens: 25,
+			Checks: []CheckObservation{
+				{Type: "finish_reason", Expected: "stop", Passed: true},
+				{Type: "ends_with", Expected: "<<END>>", Passed: true},
+			},
+		},
+		{
+			CanaryID:     "json_002",
+			Response:     `{"status": "active", "count": 42}`,
+			FinishReason: "stop",
+			OutputTokens: 18,
+			Checks: []CheckObservation{
+				{Type: "json_valid", Expected: "json_valid", Passed: true},
+				{Type: "no_code_fence", Expected: "no_code_fence", Passed: true},
+			},
+		},
+		{
+			CanaryID:     "instruct_002",
+			Response:     "1-2-3-4-5",
+			FinishReason: "stop",
+			OutputTokens: 10,
+			Checks: []CheckObservation{
+				{Type: "output_equals", Expected: "1-2-3-4-5", Passed: true},
+			},
+		},
+	}
+
+	candidate := []Observation{
+		{
+			CanaryID:     "TRN-E1",
+			Response:     "Monday\nTuesday\nWednesday\nThursday",
+			FinishReason: "length",
+			OutputTokens: 14,
+			Checks: []CheckObservation{
+				{Type: "finish_reason", Expected: "stop", Passed: false},
+				{Type: "ends_with", Expected: "<<END>>", Passed: false},
+			},
+		},
+		{
+			CanaryID:     "json_002",
+			Response:     `{"status": "active", "c`,
+			FinishReason: "length",
+			OutputTokens: 14,
+			Checks: []CheckObservation{
+				{Type: "json_valid", Expected: "json_valid", Passed: false},
+				{Type: "no_code_fence", Expected: "no_code_fence", Passed: true},
+			},
+		},
+		{
+			CanaryID:     "instruct_002",
+			Response:     "1-2-3-",
+			FinishReason: "length",
+			OutputTokens: 14,
+			Checks: []CheckObservation{
+				{Type: "output_equals", Expected: "1-2-3-4-5", Passed: false},
+			},
+		},
+	}
+
+	analysis := Analyze(reference, candidate)
+	if !analysis.Detected {
+		t.Fatalf("expected truncation drift to be detected, got false")
+	}
+	if analysis.PredictedLayer != "request_config" {
+		t.Fatalf("expected request_config layer attribution for observable truncation, got %q (evidence: %v)",
+			analysis.PredictedLayer, analysis.Evidence)
+	}
+}
+
+func TestModelRegressionNotConfusedWithTruncation(t *testing.T) {
+	reference := []Observation{
+		{
+			CanaryID:     "math_001",
+			Response:     "323",
+			FinishReason: "stop",
+			OutputTokens: 2,
+			Checks:       []CheckObservation{{Type: "number_equals", Expected: "323", Passed: true}},
+		},
+		{
+			CanaryID:     "math_002",
+			Response:     "90",
+			FinishReason: "stop",
+			OutputTokens: 2,
+			Checks:       []CheckObservation{{Type: "number_equals", Expected: "90", Passed: true}},
+		},
+		{
+			CanaryID:     "CAP-E1",
+			Response:     "408",
+			FinishReason: "stop",
+			OutputTokens: 2,
+			Checks:       []CheckObservation{{Type: "number_equals", Expected: "408", Passed: true}},
+		},
+		{
+			CanaryID:     "logic_001",
+			Response:     "YES",
+			FinishReason: "stop",
+			OutputTokens: 2,
+			Checks:       []CheckObservation{{Type: "output_equals", Expected: "YES", Passed: true}},
+		},
+	}
+
+	candidate := []Observation{
+		{
+			CanaryID:     "math_001",
+			Response:     "999",
+			FinishReason: "stop",
+			OutputTokens: 2,
+			Checks:       []CheckObservation{{Type: "number_equals", Expected: "323", Passed: false}},
+		},
+		{
+			CanaryID:     "math_002",
+			Response:     "120",
+			FinishReason: "stop",
+			OutputTokens: 2,
+			Checks:       []CheckObservation{{Type: "number_equals", Expected: "90", Passed: false}},
+		},
+		{
+			CanaryID:     "CAP-E1",
+			Response:     "500",
+			FinishReason: "stop",
+			OutputTokens: 2,
+			Checks:       []CheckObservation{{Type: "number_equals", Expected: "408", Passed: false}},
+		},
+		{
+			CanaryID:     "logic_001",
+			Response:     "NO",
+			FinishReason: "stop",
+			OutputTokens: 2,
+			Checks:       []CheckObservation{{Type: "output_equals", Expected: "YES", Passed: false}},
+		},
+	}
+
+	analysis := Analyze(reference, candidate)
+	if !analysis.Detected {
+		t.Fatalf("expected capability drop to be detected, got false")
+	}
+	if analysis.PredictedLayer != "model" {
+		t.Fatalf("expected model layer attribution for capability regressions, got %q (evidence: %v)",
+			analysis.PredictedLayer, analysis.Evidence)
+	}
+}

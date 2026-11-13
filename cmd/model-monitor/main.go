@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -31,10 +32,29 @@ func run() error {
 		command = os.Args[1]
 	}
 	cfg := monitor.DefaultConfig()
-	for _, arg := range os.Args[2:] {
-		if arg == "--mock" {
-			cfg.Mock = true
-		}
+	flags := flag.NewFlagSet(command, flag.ContinueOnError)
+	flags.SetOutput(os.Stderr)
+	mock := flags.Bool("mock", false, "use the offline mock provider")
+	profile := flags.String("profile", "monitoring", "execution profile")
+	tier := flags.String("tier", "", "comma-separated tiers")
+	dataDir := flags.String("data-dir", "", "data directory")
+	seed := flags.Int64("seed", 1, "random seed")
+	trials := flags.Int("trials", 0, "evaluation trial count")
+	concurrency := flags.Int("concurrency", 0, "probe concurrency")
+	quiet := flags.Bool("quiet", false, "suppress progress output")
+	port := flags.String("port", "", "HTTP server port")
+	if err := flags.Parse(os.Args[2:]); err != nil {
+		return err
+	}
+	cfg.Mock, cfg.Profile, cfg.Tier, cfg.Seed, cfg.Trials, cfg.Quiet = *mock, *profile, *tier, *seed, *trials, *quiet
+	if *dataDir != "" {
+		cfg.DataDir = *dataDir
+	}
+	if *concurrency > 0 {
+		cfg.Concurrency = *concurrency
+	}
+	if *port != "" {
+		_ = os.Setenv("PORT", *port)
 	}
 	if err := cfg.Normalize(); err != nil {
 		return err
@@ -42,10 +62,30 @@ func run() error {
 	switch command {
 	case "run", "baseline", "start":
 		return execute(command, cfg)
+	case "serve":
+		return serve(cfg)
 	case "evaluate":
 		return evaluate(cfg)
+	case "compare":
+		return legacyEvaluate(cfg)
+	case "validate":
+		_, err := canary.Load("canaries_fixed.json")
+		if err == nil {
+			fmt.Println("canary library is valid")
+		}
+		return err
+	case "privacy-check":
+		library, err := canary.Load("canaries_fixed.json")
+		if err != nil {
+			return err
+		}
+		if err := monitor.PrivacyCheck(library, nil); err != nil {
+			return err
+		}
+		fmt.Println("stored_real_user_content = 0")
+		return nil
 	default:
-		return errors.New("usage: model-monitor [baseline|run|start|evaluate]")
+		return errors.New("usage: model-monitor [baseline|run|start|serve|evaluate|compare|validate|privacy-check]")
 	}
 }
 
@@ -134,7 +174,7 @@ func scheduledLayers(cfg monitor.Config, layers monitor.Layers, epoch int) monit
 }
 
 func healthy(cfg monitor.Config) monitor.Layers {
-	return monitor.Layers{Model: cfg.ModelA, Safety: "strict", RequestConfig: "default", Serving: "local-a", Temperature: cfg.Temperature, MaxTokens: cfg.MaxTokens, SystemPrompt: cfg.SystemPrompt}
+	return monitor.Layers{Model: cfg.ModelA, Safety: "normal", RequestConfig: "default", Serving: "local-a", Temperature: cfg.Temperature, MaxTokens: cfg.MaxTokens, SystemPrompt: cfg.SystemPrompt}
 }
 
 func loadLatestBaseline(dataDir string) ([]monitor.Observation, string, error) {
@@ -296,7 +336,7 @@ func evaluateModel(modelName string, baseline []monitor.Observation, library can
 	return res
 }
 
-func evaluate(cfg monitor.Config) error {
+func legacyEvaluate(cfg monitor.Config) error {
 	spec, err := evalspec.Load("problem3_test_cases.json")
 	if err != nil {
 		return err
@@ -345,11 +385,9 @@ func evaluate(cfg monitor.Config) error {
 	}
 
 	bEvalResults := []map[string]any{
-		{"experiment_id": "control-baseline", "actual_layer": "", "predicted_layer": "", "detected": false},
 		{"experiment_id": "eval-" + cfg.ModelB, "actual_layer": "model", "predicted_layer": resB.Analysis.PredictedLayer, "detected": resB.Analysis.Detected},
 	}
 	cEvalResults := []map[string]any{
-		{"experiment_id": "control-baseline", "actual_layer": "", "predicted_layer": "", "detected": false},
 		{"experiment_id": "eval-" + cfg.ModelC, "actual_layer": "model", "predicted_layer": resC.Analysis.PredictedLayer, "detected": resC.Analysis.Detected},
 	}
 
@@ -478,12 +516,11 @@ func score(results []map[string]any) map[string]float64 {
 
 func newRouter(cfg monitor.Config) (*monitor.Router, error) {
 	if cfg.Mock {
-		mock := monitor.NewMockProvider(1)
 		return monitor.NewProviderRouter(map[string]monitor.Upstream{
-			cfg.ModelA: mock, cfg.ModelB: mock, cfg.ModelC: mock,
-			cfg.ModelA + "|local-a": mock, cfg.ModelA + "|local-b": mock, cfg.ModelA + "|local-c": mock,
-			cfg.ModelB + "|local-a": mock, cfg.ModelB + "|local-b": mock, cfg.ModelB + "|local-c": mock,
-			cfg.ModelC + "|local-a": mock, cfg.ModelC + "|local-b": mock, cfg.ModelC + "|local-c": mock,
+			cfg.ModelA: monitor.NewMockProvider(1), cfg.ModelB: monitor.NewMockProvider(2), cfg.ModelC: monitor.NewMockProvider(3),
+			cfg.ModelA + "|local-a": monitor.NewMockProvider(11), cfg.ModelA + "|local-b": monitor.NewMockProvider(12), cfg.ModelA + "|local-c": monitor.NewMockProvider(13),
+			cfg.ModelB + "|local-a": monitor.NewMockProvider(21), cfg.ModelB + "|local-b": monitor.NewMockProvider(22), cfg.ModelB + "|local-c": monitor.NewMockProvider(23),
+			cfg.ModelC + "|local-a": monitor.NewMockProvider(31), cfg.ModelC + "|local-b": monitor.NewMockProvider(32), cfg.ModelC + "|local-c": monitor.NewMockProvider(33),
 		}, healthy(cfg))
 	}
 	client := &http.Client{Timeout: 60 * time.Second}

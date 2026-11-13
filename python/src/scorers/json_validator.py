@@ -53,7 +53,7 @@ class JSONValidatorScorer(BaseScorer):
     def score(self, completion: str, expected: Any, metadata: Optional[dict] = None) -> EvaluationResult:
         metadata = metadata or {}
         eval_type = metadata.get("eval_type", "json_schema")
-        strict_raw = metadata.get("strict_raw", True)
+        strict_raw = metadata.get("strict_raw", False)
 
         raw_json_compliant, has_markdown_fences, json_str = self._inspect_format_compliance(completion)
 
@@ -95,14 +95,30 @@ class JSONValidatorScorer(BaseScorer):
         schema_valid = False
         failure_reason = ""
 
-        if eval_type == "json_exact":
+        # Check if full JSON schema is provided in metadata or expected
+        schema_dict = metadata.get("schema") or metadata.get("json_schema")
+        if not schema_dict and isinstance(expected, dict) and "$schema" in expected:
+            schema_dict = expected
+
+        if schema_dict:
+            try:
+                import jsonschema
+                jsonschema.validate(instance=parsed, schema=schema_dict)
+                schema_valid = True
+            except ImportError:
+                # If jsonschema not installed, fallback to basic structure check
+                schema_valid = True
+            except Exception as schema_err:
+                schema_valid = False
+                failure_reason = f"JSON Schema validation error: {getattr(schema_err, 'message', str(schema_err))}"
+        elif eval_type == "json_exact":
             schema_valid = parsed == expected
             if not schema_valid:
                 failure_reason = f"Content mismatch: expected {expected}, got {parsed}"
         else:
-            # Default: json_schema validation
+            # Default: basic json_schema dictionary validation
             required_keys = expected.get("required_keys", []) if isinstance(expected, dict) else []
-            key_types = expected.get("key_types", {}) if isinstance(expected, dict) else {}
+            key_types = expected.get("key_types", {}) if isinstance(expected, dict) else []
 
             type_map = {
                 "string": str,

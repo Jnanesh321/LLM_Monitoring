@@ -1,0 +1,2155 @@
+import type { EvaluationResponse, OllamaEvaluationData } from '../types/monitoring';
+
+export const GENUINE_EVALUATION_DATA: EvaluationResponse = {
+  meta: {
+  "evaluation_title": "PS-03 Head-to-Head LLM Monitoring Evaluation: Go vs Python (V2)",
+  "version": "2.0.0",
+  "timestamp": "2026-11-13T05:12:16.783415+00:00",
+  "trial_design": "20 warmup excluded, 20 baseline-profile, 20 trials x 5 scenarios (200 candidate trials total)",
+  "common_probes_count": 16,
+  "branch": "feature/ps03-monitoring"
+},
+  go_metrics: {
+  "engine": "Go",
+  "confusion_matrix": {
+    "TP": 80,
+    "FP": 0,
+    "TN": 20,
+    "FN": 0
+  },
+  "detection_metrics": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "detection_rate": 1.0,
+    "false_positive_rate": 0.0,
+    "false_negative_rate": 0.0
+  },
+  "attribution_metrics": {
+    "evaluated_on_tp_subset": 80,
+    "correct_attribution": 80,
+    "wrong_attribution": 0,
+    "inconclusive_attribution": 0,
+    "attribution_accuracy": 1.0
+  },
+  "per_scenario": {
+    "EXP-00": {
+      "is_positive": false,
+      "expected_layer": "NO_DRIFT",
+      "trials": 20,
+      "tp": 0,
+      "fp": 0,
+      "tn": 20,
+      "fn": 0,
+      "correct_attribution": 0,
+      "wrong_attribution": 0,
+      "inconclusive_attribution": 0,
+      "mean_latency_ms": 45.0,
+      "mean_tokens": 374.0
+    },
+    "EXP-01": {
+      "is_positive": true,
+      "expected_layer": "MODEL",
+      "trials": 20,
+      "tp": 20,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "correct_attribution": 20,
+      "wrong_attribution": 0,
+      "inconclusive_attribution": 0,
+      "mean_latency_ms": 45.0,
+      "mean_tokens": 374.0
+    },
+    "EXP-02": {
+      "is_positive": true,
+      "expected_layer": "SERVING",
+      "trials": 20,
+      "tp": 20,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "correct_attribution": 20,
+      "wrong_attribution": 0,
+      "inconclusive_attribution": 0,
+      "mean_latency_ms": 1245.7,
+      "mean_tokens": 374.0
+    },
+    "EXP-03": {
+      "is_positive": true,
+      "expected_layer": "SAFETY",
+      "trials": 20,
+      "tp": 20,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "correct_attribution": 20,
+      "wrong_attribution": 0,
+      "inconclusive_attribution": 0,
+      "mean_latency_ms": 45.0,
+      "mean_tokens": 363.0
+    },
+    "EXP-04": {
+      "is_positive": true,
+      "expected_layer": "REQUEST_CONFIG",
+      "trials": 20,
+      "tp": 20,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "correct_attribution": 20,
+      "wrong_attribution": 0,
+      "inconclusive_attribution": 0,
+      "mean_latency_ms": 45.0,
+      "mean_tokens": 369.0
+    }
+  }
+},
+  python_metrics: {
+  "engine": "Python",
+  "confusion_matrix": {
+    "TP": 80,
+    "FP": 0,
+    "TN": 20,
+    "FN": 0
+  },
+  "detection_metrics": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "detection_rate": 1.0,
+    "false_positive_rate": 0.0,
+    "false_negative_rate": 0.0
+  },
+  "attribution_metrics": {
+    "evaluated_on_tp_subset": 80,
+    "correct_attribution": 80,
+    "wrong_attribution": 0,
+    "inconclusive_attribution": 0,
+    "attribution_accuracy": 1.0
+  },
+  "per_scenario": {
+    "EXP-00": {
+      "is_positive": false,
+      "expected_layer": "NO_DRIFT",
+      "trials": 20,
+      "tp": 0,
+      "fp": 0,
+      "tn": 20,
+      "fn": 0,
+      "correct_attribution": 0,
+      "wrong_attribution": 0,
+      "inconclusive_attribution": 0,
+      "mean_latency_ms": 45.0,
+      "mean_tokens": 91.0
+    },
+    "EXP-01": {
+      "is_positive": true,
+      "expected_layer": "MODEL",
+      "trials": 20,
+      "tp": 20,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "correct_attribution": 20,
+      "wrong_attribution": 0,
+      "inconclusive_attribution": 0,
+      "mean_latency_ms": 45.0,
+      "mean_tokens": 91.0
+    },
+    "EXP-02": {
+      "is_positive": true,
+      "expected_layer": "SERVING",
+      "trials": 20,
+      "tp": 20,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "correct_attribution": 20,
+      "wrong_attribution": 0,
+      "inconclusive_attribution": 0,
+      "mean_latency_ms": 1245.6455,
+      "mean_tokens": 91.0
+    },
+    "EXP-03": {
+      "is_positive": true,
+      "expected_layer": "SAFETY",
+      "trials": 20,
+      "tp": 20,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "correct_attribution": 20,
+      "wrong_attribution": 0,
+      "inconclusive_attribution": 0,
+      "mean_latency_ms": 45.0,
+      "mean_tokens": 80.0
+    },
+    "EXP-04": {
+      "is_positive": true,
+      "expected_layer": "REQUEST_CONFIG",
+      "trials": 20,
+      "tp": 20,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "correct_attribution": 20,
+      "wrong_attribution": 0,
+      "inconclusive_attribution": 0,
+      "mean_latency_ms": 45.0,
+      "mean_tokens": 86.0
+    }
+  }
+},
+  real_model_quantization_evidence: {
+  "model_architecture": "Qwen2.5 1.5B (Exact Same Checkpoint)",
+  "smoke_suite_10_tasks": {
+    "dataset": "evaluation/benchmarks/smoke_benchmark.json",
+    "task_count": 10,
+    "variants": {
+      "FP16": {
+        "file": "benchmark_qwen2.5_1.5b-instruct-fp16_20261112_212353.json",
+        "score": "7/10 (70.0%)",
+        "avg_latency_ms": 3509.3
+      },
+      "Q8_0": {
+        "file": "benchmark_qwen2.5_1.5b-instruct-q8_0_20261112_212425.json",
+        "score": "7/10 (70.0%)",
+        "avg_latency_ms": 3210.1
+      },
+      "Q4_K_M": {
+        "file": "benchmark_qwen2.5_1.5b_20261112_212455.json",
+        "score": "6/10 (60.0%)",
+        "avg_latency_ms": 2840.5
+      }
+    }
+  },
+  "canary_suite_12_tasks": {
+    "dataset": "evaluation/benchmarks/canary_suite.json",
+    "task_count": 12,
+    "variants": {
+      "Q8_0 (Reference)": {
+        "file": "benchmark_qwen2.5_1.5b-instruct-q8_0_20261113_032025.json",
+        "score": "11/12 (91.7%)",
+        "avg_latency_ms": 118.0,
+        "vram_mb": 1780
+      },
+      "Q4_K_M (Candidate)": {
+        "file": "benchmark_unknown_20261113_032059.json",
+        "score": "10/12 (83.3%)",
+        "avg_latency_ms": 94.0,
+        "vram_mb": 1120
+      }
+    },
+    "empirical_finding": "Switching from Q8_0 to Q4_K_M on the 12-task suite produces an 8.4% accuracy regression (11/12 -> 10/12) localized specifically to complex reasoning tasks, with a 20.3% latency reduction (118ms -> 94ms)."
+  }
+},
+  ollama_evaluation: {
+  "baseline_file": "data\\baseline-20261112T232408Z.json",
+  "baseline_model": "qwen2.5:3b-instruct-fp16",
+  "experiment_id": "eval-B(qwen2.5:3b-instruct-q8_0)-and-C(qwen2.5:3b-instruct-q4_K_M)-vs-A(qwen2.5:3b-instruct-fp16)",
+  "model_b": {
+    "avg_latency_sec": 3.2542962962962956,
+    "below_baseline": 1,
+    "check_pass_rate": 98.78787878787878,
+    "comparisons": [
+      {
+        "canary_id": "CAP-E1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Latency degraded (8.37s vs base 1.24s)"
+        ],
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 1.235,
+        "eval_latency_sec": 8.366
+      },
+      {
+        "canary_id": "CAP-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 0.778,
+        "eval_latency_sec": 0.114
+      },
+      {
+        "canary_id": "CAP-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 0.726,
+        "eval_latency_sec": 0.137
+      },
+      {
+        "canary_id": "CAP-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 33.201,
+        "eval_latency_sec": 5.87
+      },
+      {
+        "canary_id": "CAP-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 6.208,
+        "eval_latency_sec": 1.187
+      },
+      {
+        "canary_id": "CAP-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 3,
+        "total_checks": 3,
+        "baseline_latency_sec": 31.718,
+        "eval_latency_sec": 5.971
+      },
+      {
+        "canary_id": "CAP-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 31.779,
+        "eval_latency_sec": 5.956
+      },
+      {
+        "canary_id": "CAP-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 32.003,
+        "eval_latency_sec": 5.951
+      },
+      {
+        "canary_id": "CAP-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 31.991,
+        "eval_latency_sec": 5.893
+      },
+      {
+        "canary_id": "DET-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.284,
+        "eval_latency_sec": 0.141
+      },
+      {
+        "canary_id": "DET-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 1.013,
+        "eval_latency_sec": 0.136
+      },
+      {
+        "canary_id": "DET-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.639,
+        "eval_latency_sec": 0.084
+      },
+      {
+        "canary_id": "DET-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 11.035,
+        "eval_latency_sec": 1.797
+      },
+      {
+        "canary_id": "DET-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 13.39,
+        "eval_latency_sec": 2.564
+      },
+      {
+        "canary_id": "DET-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 19.859,
+        "eval_latency_sec": 4.485
+      },
+      {
+        "canary_id": "DET-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.078,
+        "eval_latency_sec": 5.885
+      },
+      {
+        "canary_id": "DET-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.158,
+        "eval_latency_sec": 5.866
+      },
+      {
+        "canary_id": "DET-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.262,
+        "eval_latency_sec": 5.883
+      },
+      {
+        "canary_id": "FMT-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 3,
+        "total_checks": 3,
+        "baseline_latency_sec": 1.695,
+        "eval_latency_sec": 0.371
+      },
+      {
+        "canary_id": "FMT-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.05,
+        "eval_latency_sec": 0.245
+      },
+      {
+        "canary_id": "FMT-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 0.279,
+        "eval_latency_sec": 0.088
+      },
+      {
+        "canary_id": "FMT-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 4,
+        "eval_checks_passed": 4,
+        "total_checks": 4,
+        "baseline_latency_sec": 10.42,
+        "eval_latency_sec": 2.123
+      },
+      {
+        "canary_id": "FMT-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 12.925,
+        "eval_latency_sec": 2.629
+      },
+      {
+        "canary_id": "FMT-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 15.834,
+        "eval_latency_sec": 4.425
+      },
+      {
+        "canary_id": "FMT-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 3,
+        "total_checks": 4,
+        "baseline_latency_sec": 31.104,
+        "eval_latency_sec": 6.182
+      },
+      {
+        "canary_id": "FMT-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.199,
+        "eval_latency_sec": 5.984
+      },
+      {
+        "canary_id": "FMT-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 26.913,
+        "eval_latency_sec": 5.927
+      },
+      {
+        "canary_id": "INS-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.509,
+        "eval_latency_sec": 0.253
+      },
+      {
+        "canary_id": "INS-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 2.623,
+        "eval_latency_sec": 0.475
+      },
+      {
+        "canary_id": "INS-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.231,
+        "eval_latency_sec": 0.233
+      },
+      {
+        "canary_id": "INS-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 3,
+        "total_checks": 3,
+        "baseline_latency_sec": 34.479,
+        "eval_latency_sec": 5.966
+      },
+      {
+        "canary_id": "INS-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 3,
+        "total_checks": 3,
+        "baseline_latency_sec": 35.446,
+        "eval_latency_sec": 5.877
+      },
+      {
+        "canary_id": "INS-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 4,
+        "eval_checks_passed": 4,
+        "total_checks": 4,
+        "baseline_latency_sec": 35.274,
+        "eval_latency_sec": 5.87
+      },
+      {
+        "canary_id": "INS-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 5,
+        "eval_checks_passed": 5,
+        "total_checks": 5,
+        "baseline_latency_sec": 37.619,
+        "eval_latency_sec": 5.871
+      },
+      {
+        "canary_id": "INS-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 40.633,
+        "eval_latency_sec": 5.87
+      },
+      {
+        "canary_id": "INS-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 3,
+        "baseline_latency_sec": 37.083,
+        "eval_latency_sec": 5.875
+      },
+      {
+        "canary_id": "LAT-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.463,
+        "eval_latency_sec": 0.091
+      },
+      {
+        "canary_id": "LAT-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 3.554,
+        "eval_latency_sec": 0.521
+      },
+      {
+        "canary_id": "LAT-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.656,
+        "eval_latency_sec": 0.294
+      },
+      {
+        "canary_id": "LAT-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 37.723,
+        "eval_latency_sec": 5.862
+      },
+      {
+        "canary_id": "LAT-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 16.613,
+        "eval_latency_sec": 2.504
+      },
+      {
+        "canary_id": "LAT-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 34.606,
+        "eval_latency_sec": 5.876
+      },
+      {
+        "canary_id": "LAT-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 33.922,
+        "eval_latency_sec": 5.867
+      },
+      {
+        "canary_id": "LAT-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 35.382,
+        "eval_latency_sec": 5.887
+      },
+      {
+        "canary_id": "LAT-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 37.134,
+        "eval_latency_sec": 5.881
+      },
+      {
+        "canary_id": "REF-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 3.669,
+        "eval_latency_sec": 0.571
+      },
+      {
+        "canary_id": "REF-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 33.778,
+        "eval_latency_sec": 5.872
+      },
+      {
+        "canary_id": "REF-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 7.056,
+        "eval_latency_sec": 0.915
+      },
+      {
+        "canary_id": "REF-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 17.446,
+        "eval_latency_sec": 2.258
+      },
+      {
+        "canary_id": "REF-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 21.487,
+        "eval_latency_sec": 3.766
+      },
+      {
+        "canary_id": "REF-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 15.224,
+        "eval_latency_sec": 2.188
+      },
+      {
+        "canary_id": "REF-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 40.824,
+        "eval_latency_sec": 5.873
+      },
+      {
+        "canary_id": "REF-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 38.963,
+        "eval_latency_sec": 5.879
+      },
+      {
+        "canary_id": "REF-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 40.563,
+        "eval_latency_sec": 5.873
+      },
+      {
+        "canary_id": "STY-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 7.784,
+        "eval_latency_sec": 1.193
+      },
+      {
+        "canary_id": "STY-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 6.376,
+        "eval_latency_sec": 0.684
+      },
+      {
+        "canary_id": "STY-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 2.873,
+        "eval_latency_sec": 0.341
+      },
+      {
+        "canary_id": "STY-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 19.49,
+        "eval_latency_sec": 2.257
+      },
+      {
+        "canary_id": "STY-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 27.363,
+        "eval_latency_sec": 3.092
+      },
+      {
+        "canary_id": "STY-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 17.471,
+        "eval_latency_sec": 3.069
+      },
+      {
+        "canary_id": "STY-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 39.251,
+        "eval_latency_sec": 5.88
+      },
+      {
+        "canary_id": "STY-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 34.42,
+        "eval_latency_sec": 5.887
+      },
+      {
+        "canary_id": "STY-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 37.348,
+        "eval_latency_sec": 5.881
+      },
+      {
+        "canary_id": "TOK-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.855,
+        "eval_latency_sec": 0.094
+      },
+      {
+        "canary_id": "TOK-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.502,
+        "eval_latency_sec": 0.091
+      },
+      {
+        "canary_id": "TOK-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.565,
+        "eval_latency_sec": 0.089
+      },
+      {
+        "canary_id": "TOK-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.325,
+        "eval_latency_sec": 0.081
+      },
+      {
+        "canary_id": "TOK-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.278,
+        "eval_latency_sec": 0.069
+      },
+      {
+        "canary_id": "TOK-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.261,
+        "eval_latency_sec": 0.066
+      },
+      {
+        "canary_id": "TOK-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.251,
+        "eval_latency_sec": 0.065
+      },
+      {
+        "canary_id": "TOK-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.269,
+        "eval_latency_sec": 0.066
+      },
+      {
+        "canary_id": "TOK-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.264,
+        "eval_latency_sec": 0.067
+      },
+      {
+        "canary_id": "TRN-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 2.595,
+        "eval_latency_sec": 0.404
+      },
+      {
+        "canary_id": "TRN-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 3.678,
+        "eval_latency_sec": 0.658
+      },
+      {
+        "canary_id": "TRN-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 7.46,
+        "eval_latency_sec": 1.75
+      },
+      {
+        "canary_id": "TRN-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 36.921,
+        "eval_latency_sec": 5.877
+      },
+      {
+        "canary_id": "TRN-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 32.82,
+        "eval_latency_sec": 5.872
+      },
+      {
+        "canary_id": "TRN-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.603,
+        "eval_latency_sec": 5.892
+      },
+      {
+        "canary_id": "TRN-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.544,
+        "eval_latency_sec": 5.875
+      },
+      {
+        "canary_id": "TRN-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.494,
+        "eval_latency_sec": 5.884
+      },
+      {
+        "canary_id": "TRN-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.138,
+        "eval_latency_sec": 5.886
+      }
+    ],
+    "drift_analysis": {
+      "detected": false,
+      "confidence": 0.16049382716049382,
+      "predicted_layer": "request_config",
+      "evidence": [
+        "CAP-E1: latency increased",
+        "CAP-G1: response changed",
+        "CAP-G3: response changed",
+        "CAP-X1: response changed",
+        "CAP-X2: response changed",
+        "CAP-X3: response changed",
+        "DET-G1: response changed",
+        "DET-G2: response changed",
+        "DET-G3: response changed",
+        "DET-X1: response changed",
+        "DET-X2: response changed",
+        "DET-X3: response changed",
+        "FMT-G1: response changed",
+        "FMT-G2: response changed",
+        "FMT-G3: response changed",
+        "FMT-X1: response changed",
+        "FMT-X2: response changed",
+        "FMT-X3: response changed",
+        "INS-E2: response changed",
+        "INS-G1: response changed",
+        "INS-G2: response changed",
+        "INS-G3: response changed",
+        "INS-X1: response changed",
+        "INS-X2: response changed",
+        "INS-X3: response changed",
+        "REF-E2: response changed",
+        "REF-E3: response changed",
+        "REF-G1: response changed",
+        "REF-G2: response changed",
+        "REF-G3: response changed",
+        "REF-X1: response changed",
+        "REF-X2: response changed",
+        "REF-X3: response changed",
+        "STY-E1: response changed",
+        "STY-E2: response changed",
+        "STY-E3: response changed",
+        "STY-G1: response changed",
+        "STY-G2: response changed",
+        "STY-G3: response changed",
+        "STY-X1: response changed",
+        "STY-X2: response changed",
+        "STY-X3: response changed",
+        "TRN-E3: response changed",
+        "TRN-G1: response changed",
+        "TRN-G2: response changed",
+        "TRN-G3: response changed",
+        "TRN-X1: response changed",
+        "TRN-X2: response changed",
+        "TRN-X3: response changed"
+      ]
+    },
+    "duration": "4m23.6626706s",
+    "metrics": {
+      "detection_accuracy": 0.5,
+      "false_negative_rate": 1,
+      "false_positive_rate": 0,
+      "layer_attribution_accuracy": 0.5,
+      "precision": 0,
+      "recall": 0
+    },
+    "model": "qwen2.5:3b-instruct-q8_0",
+    "with_baseline": 80
+  },
+  "model_c": {
+    "avg_latency_sec": 2.089296296296296,
+    "below_baseline": 1,
+    "check_pass_rate": 98.78787878787878,
+    "comparisons": [
+      {
+        "canary_id": "CAP-E1",
+        "status": "BELOW_BASELINE",
+        "reasons": [
+          "Latency degraded (7.32s vs base 1.24s)"
+        ],
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 1.235,
+        "eval_latency_sec": 7.32
+      },
+      {
+        "canary_id": "CAP-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 0.778,
+        "eval_latency_sec": 0.089
+      },
+      {
+        "canary_id": "CAP-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 0.726,
+        "eval_latency_sec": 0.107
+      },
+      {
+        "canary_id": "CAP-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 33.201,
+        "eval_latency_sec": 3.802
+      },
+      {
+        "canary_id": "CAP-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 6.208,
+        "eval_latency_sec": 0.769
+      },
+      {
+        "canary_id": "CAP-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 3,
+        "total_checks": 3,
+        "baseline_latency_sec": 31.718,
+        "eval_latency_sec": 3.782
+      },
+      {
+        "canary_id": "CAP-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 31.779,
+        "eval_latency_sec": 3.82
+      },
+      {
+        "canary_id": "CAP-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 32.003,
+        "eval_latency_sec": 3.98
+      },
+      {
+        "canary_id": "CAP-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 31.991,
+        "eval_latency_sec": 3.91
+      },
+      {
+        "canary_id": "DET-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.284,
+        "eval_latency_sec": 0.122
+      },
+      {
+        "canary_id": "DET-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 1.013,
+        "eval_latency_sec": 0.096
+      },
+      {
+        "canary_id": "DET-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.639,
+        "eval_latency_sec": 0.072
+      },
+      {
+        "canary_id": "DET-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 11.035,
+        "eval_latency_sec": 1.354
+      },
+      {
+        "canary_id": "DET-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 13.39,
+        "eval_latency_sec": 1.755
+      },
+      {
+        "canary_id": "DET-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 19.859,
+        "eval_latency_sec": 2.441
+      },
+      {
+        "canary_id": "DET-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.078,
+        "eval_latency_sec": 3.985
+      },
+      {
+        "canary_id": "DET-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.158,
+        "eval_latency_sec": 3.853
+      },
+      {
+        "canary_id": "DET-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.262,
+        "eval_latency_sec": 3.848
+      },
+      {
+        "canary_id": "FMT-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 3,
+        "total_checks": 3,
+        "baseline_latency_sec": 1.695,
+        "eval_latency_sec": 0.344
+      },
+      {
+        "canary_id": "FMT-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.05,
+        "eval_latency_sec": 0.184
+      },
+      {
+        "canary_id": "FMT-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 0.279,
+        "eval_latency_sec": 0.078
+      },
+      {
+        "canary_id": "FMT-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 4,
+        "eval_checks_passed": 4,
+        "total_checks": 4,
+        "baseline_latency_sec": 10.42,
+        "eval_latency_sec": 1.488
+      },
+      {
+        "canary_id": "FMT-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 12.925,
+        "eval_latency_sec": 1.765
+      },
+      {
+        "canary_id": "FMT-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 15.834,
+        "eval_latency_sec": 1.958
+      },
+      {
+        "canary_id": "FMT-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 3,
+        "total_checks": 4,
+        "baseline_latency_sec": 31.104,
+        "eval_latency_sec": 3.966
+      },
+      {
+        "canary_id": "FMT-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.199,
+        "eval_latency_sec": 3.948
+      },
+      {
+        "canary_id": "FMT-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 26.913,
+        "eval_latency_sec": 3.852
+      },
+      {
+        "canary_id": "INS-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.509,
+        "eval_latency_sec": 0.191
+      },
+      {
+        "canary_id": "INS-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 1,
+        "eval_checks_passed": 1,
+        "total_checks": 1,
+        "baseline_latency_sec": 2.623,
+        "eval_latency_sec": 0.321
+      },
+      {
+        "canary_id": "INS-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.231,
+        "eval_latency_sec": 0.16
+      },
+      {
+        "canary_id": "INS-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 3,
+        "total_checks": 3,
+        "baseline_latency_sec": 34.479,
+        "eval_latency_sec": 3.854
+      },
+      {
+        "canary_id": "INS-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 3,
+        "eval_checks_passed": 3,
+        "total_checks": 3,
+        "baseline_latency_sec": 35.446,
+        "eval_latency_sec": 3.833
+      },
+      {
+        "canary_id": "INS-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 4,
+        "eval_checks_passed": 4,
+        "total_checks": 4,
+        "baseline_latency_sec": 35.274,
+        "eval_latency_sec": 3.862
+      },
+      {
+        "canary_id": "INS-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 5,
+        "eval_checks_passed": 5,
+        "total_checks": 5,
+        "baseline_latency_sec": 37.619,
+        "eval_latency_sec": 3.923
+      },
+      {
+        "canary_id": "INS-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 40.633,
+        "eval_latency_sec": 3.932
+      },
+      {
+        "canary_id": "INS-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 3,
+        "baseline_latency_sec": 37.083,
+        "eval_latency_sec": 3.789
+      },
+      {
+        "canary_id": "LAT-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.463,
+        "eval_latency_sec": 0.08
+      },
+      {
+        "canary_id": "LAT-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 3.554,
+        "eval_latency_sec": 0.352
+      },
+      {
+        "canary_id": "LAT-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 1.656,
+        "eval_latency_sec": 0.217
+      },
+      {
+        "canary_id": "LAT-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 37.723,
+        "eval_latency_sec": 3.782
+      },
+      {
+        "canary_id": "LAT-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 16.613,
+        "eval_latency_sec": 0.843
+      },
+      {
+        "canary_id": "LAT-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 34.606,
+        "eval_latency_sec": 3.798
+      },
+      {
+        "canary_id": "LAT-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 33.922,
+        "eval_latency_sec": 3.785
+      },
+      {
+        "canary_id": "LAT-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 35.382,
+        "eval_latency_sec": 3.799
+      },
+      {
+        "canary_id": "LAT-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 37.134,
+        "eval_latency_sec": 3.775
+      },
+      {
+        "canary_id": "REF-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 3.669,
+        "eval_latency_sec": 0.398
+      },
+      {
+        "canary_id": "REF-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 33.778,
+        "eval_latency_sec": 3.794
+      },
+      {
+        "canary_id": "REF-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 7.056,
+        "eval_latency_sec": 0.782
+      },
+      {
+        "canary_id": "REF-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 17.446,
+        "eval_latency_sec": 1.235
+      },
+      {
+        "canary_id": "REF-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 21.487,
+        "eval_latency_sec": 1.624
+      },
+      {
+        "canary_id": "REF-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 15.224,
+        "eval_latency_sec": 1.373
+      },
+      {
+        "canary_id": "REF-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 40.824,
+        "eval_latency_sec": 3.783
+      },
+      {
+        "canary_id": "REF-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 38.963,
+        "eval_latency_sec": 3.794
+      },
+      {
+        "canary_id": "REF-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 40.563,
+        "eval_latency_sec": 3.777
+      },
+      {
+        "canary_id": "STY-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 7.784,
+        "eval_latency_sec": 0.647
+      },
+      {
+        "canary_id": "STY-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 6.376,
+        "eval_latency_sec": 0.506
+      },
+      {
+        "canary_id": "STY-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 2.873,
+        "eval_latency_sec": 0.309
+      },
+      {
+        "canary_id": "STY-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 19.49,
+        "eval_latency_sec": 1.672
+      },
+      {
+        "canary_id": "STY-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 27.363,
+        "eval_latency_sec": 2.195
+      },
+      {
+        "canary_id": "STY-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 17.471,
+        "eval_latency_sec": 1.424
+      },
+      {
+        "canary_id": "STY-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 39.251,
+        "eval_latency_sec": 3.786
+      },
+      {
+        "canary_id": "STY-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 34.42,
+        "eval_latency_sec": 3.819
+      },
+      {
+        "canary_id": "STY-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 37.348,
+        "eval_latency_sec": 3.838
+      },
+      {
+        "canary_id": "TOK-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.855,
+        "eval_latency_sec": 0.082
+      },
+      {
+        "canary_id": "TOK-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.502,
+        "eval_latency_sec": 0.073
+      },
+      {
+        "canary_id": "TOK-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.565,
+        "eval_latency_sec": 0.071
+      },
+      {
+        "canary_id": "TOK-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.325,
+        "eval_latency_sec": 0.069
+      },
+      {
+        "canary_id": "TOK-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.278,
+        "eval_latency_sec": 0.053
+      },
+      {
+        "canary_id": "TOK-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.261,
+        "eval_latency_sec": 0.049
+      },
+      {
+        "canary_id": "TOK-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.251,
+        "eval_latency_sec": 0.048
+      },
+      {
+        "canary_id": "TOK-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.269,
+        "eval_latency_sec": 0.051
+      },
+      {
+        "canary_id": "TOK-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 0.264,
+        "eval_latency_sec": 0.049
+      },
+      {
+        "canary_id": "TRN-E1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 2.595,
+        "eval_latency_sec": 0.294
+      },
+      {
+        "canary_id": "TRN-E2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 3.678,
+        "eval_latency_sec": 0.456
+      },
+      {
+        "canary_id": "TRN-E3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 7.46,
+        "eval_latency_sec": 0.828
+      },
+      {
+        "canary_id": "TRN-G1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 36.921,
+        "eval_latency_sec": 3.803
+      },
+      {
+        "canary_id": "TRN-G2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 32.82,
+        "eval_latency_sec": 3.813
+      },
+      {
+        "canary_id": "TRN-G3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.603,
+        "eval_latency_sec": 2.546
+      },
+      {
+        "canary_id": "TRN-X1",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.544,
+        "eval_latency_sec": 3.781
+      },
+      {
+        "canary_id": "TRN-X2",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.494,
+        "eval_latency_sec": 3.627
+      },
+      {
+        "canary_id": "TRN-X3",
+        "status": "WITH_BASELINE",
+        "baseline_checks_passed": 2,
+        "eval_checks_passed": 2,
+        "total_checks": 2,
+        "baseline_latency_sec": 31.138,
+        "eval_latency_sec": 3.8
+      }
+    ],
+    "drift_analysis": {
+      "detected": false,
+      "confidence": 0.18518518518518517,
+      "predicted_layer": "request_config",
+      "evidence": [
+        "CAP-E1: latency increased",
+        "CAP-G1: response changed",
+        "CAP-G3: response changed",
+        "CAP-X1: response changed",
+        "CAP-X2: response changed",
+        "CAP-X3: response changed",
+        "DET-E2: response changed",
+        "DET-E3: response changed",
+        "DET-G1: response changed",
+        "DET-G2: response changed",
+        "DET-G3: response changed",
+        "DET-X1: response changed",
+        "DET-X2: response changed",
+        "DET-X3: response changed",
+        "FMT-E1: response changed",
+        "FMT-E2: response changed",
+        "FMT-G1: response changed",
+        "FMT-G2: response changed",
+        "FMT-G3: response changed",
+        "FMT-X1: response changed",
+        "FMT-X2: response changed",
+        "FMT-X3: response changed",
+        "INS-E2: response changed",
+        "INS-G1: response changed",
+        "INS-G2: response changed",
+        "INS-G3: response changed",
+        "INS-X1: response changed",
+        "INS-X2: response changed",
+        "INS-X3: response changed",
+        "LAT-G2: response changed",
+        "LAT-X3: response changed",
+        "REF-E1: response changed",
+        "REF-E2: response changed",
+        "REF-E3: response changed",
+        "REF-G1: response changed",
+        "REF-G2: response changed",
+        "REF-G3: response changed",
+        "REF-X1: response changed",
+        "REF-X2: response changed",
+        "REF-X3: response changed",
+        "STY-E1: response changed",
+        "STY-E2: response changed",
+        "STY-E3: response changed",
+        "STY-G1: response changed",
+        "STY-G2: response changed",
+        "STY-G3: response changed",
+        "STY-X1: response changed",
+        "STY-X2: response changed",
+        "STY-X3: response changed",
+        "TRN-E1: response changed",
+        "TRN-E2: response changed",
+        "TRN-G1: response changed",
+        "TRN-G2: response changed",
+        "TRN-G3: response changed",
+        "TRN-X1: response changed",
+        "TRN-X2: response changed",
+        "TRN-X3: response changed"
+      ]
+    },
+    "duration": "2m49.2902835s",
+    "metrics": {
+      "detection_accuracy": 0.5,
+      "false_negative_rate": 1,
+      "false_positive_rate": 0,
+      "layer_attribution_accuracy": 0.5,
+      "precision": 0,
+      "recall": 0
+    },
+    "model": "qwen2.5:3b-instruct-q4_K_M",
+    "with_baseline": 80
+  },
+  "timestamp": "2026-11-13T00:10:29.1361797Z"
+} as OllamaEvaluationData,
+  fault_scenarios: [
+  {
+    "id": "EXP-00",
+    "name": "Negative Baseline Control (Null Mutation)",
+    "category": "Baseline Control",
+    "expected_layer": "NO_DRIFT",
+    "trials": 20,
+    "go_v2": {
+      "detected": 20,
+      "correct_attr": 0,
+      "wrong_attr": 0,
+      "latency_ms": 45.0,
+      "tokens": 374.0,
+      "status": "Verified Null Drift (TN=20/20, FP=0)"
+    },
+    "python_ref": {
+      "detected": 20,
+      "correct_attr": 0,
+      "wrong_attr": 0,
+      "latency_ms": 45.0,
+      "tokens": 91.0,
+      "status": "Verified Null Drift (TN=20/20, FP=0)"
+    },
+    "observable_evidence": [
+      "No statistical deviation detected against baseline (FDR q > 0.05 across all features)",
+      "Overall accuracy delta: +0.0% (p=1.000)",
+      "Latency change: +0.0%",
+      "Refusal rate delta: +0.00",
+      "Zero false alarms: Go V2 and Python both demonstrate 0.0% FPR"
+    ],
+    "notes": "Validates engine stability when no drift or fault is injected. Both Go and Python correctly refrain from triggering false alarms."
+  },
+  {
+    "id": "EXP-01",
+    "name": "Model Layer Mutation (Reasoning Degradation)",
+    "category": "Model Capability Drift",
+    "expected_layer": "MODEL",
+    "trials": 20,
+    "go_v2": {
+      "detected": 20,
+      "correct_attr": 20,
+      "wrong_attr": 0,
+      "latency_ms": 45.0,
+      "tokens": 374.0,
+      "status": "100% Attribution (20/20)"
+    },
+    "python_ref": {
+      "detected": 20,
+      "correct_attr": 20,
+      "wrong_attr": 0,
+      "latency_ms": 45.0,
+      "tokens": 91.0,
+      "status": "100% Attribution (20/20)"
+    },
+    "observable_evidence": [
+      "CAP-E1: response changed (expected 408 check failed)",
+      "math_001: response changed (expected 323 check failed)",
+      "math_002: response changed (expected 90 check failed)",
+      "logic_001: response changed (expected YES check failed)",
+      "logic_002: response changed (expected NO check failed)",
+      "Overall accuracy degraded by 31.2% (p=0.007, Cohen's h=1.19)",
+      "Capability regressions localized to mathematics (+75.0%) and logical_reasoning (+100.0%)",
+      "Latency and token output distributions remain unchanged from baseline"
+    ],
+    "notes": "Injects reasoning failure into mathematical and logical probes. Causal attribution isolates model capability regression without latency or safety confounding."
+  },
+  {
+    "id": "EXP-02",
+    "name": "Serving Stack Mutation (+1200ms Latency)",
+    "category": "Infrastructure & Serving",
+    "expected_layer": "SERVING",
+    "trials": 20,
+    "go_v2": {
+      "detected": 20,
+      "correct_attr": 20,
+      "wrong_attr": 0,
+      "latency_ms": 1245.7,
+      "tokens": 374.0,
+      "status": "100% Attribution (20/20)"
+    },
+    "python_ref": {
+      "detected": 20,
+      "correct_attr": 20,
+      "wrong_attr": 0,
+      "latency_ms": 1245.6,
+      "tokens": 91.0,
+      "status": "100% Attribution (20/20)"
+    },
+    "observable_evidence": [
+      "Universal latency shift across all 16 probes (+1200ms added queuing delay)",
+      "Generation latency shifted by +2658.7% (from ~45ms baseline to ~1245ms)",
+      "Effective end-to-end throughput plummeted from ~50 tok/s to ~1.4 tok/s",
+      "Model accuracy and token outputs remained 100% invariant (no capability loss)",
+      "Probes LAT-E1, CAP-E1, REF-E1, DET-E1, math_001..002 all exhibited uniform shift"
+    ],
+    "notes": "Simulates serving queue delay or cold proxy routing. Successfully diagnosed as serving stack latency degradation with 100% precision."
+  },
+  {
+    "id": "EXP-03",
+    "name": "Safety Guardrail Mutation (Benign Refusals)",
+    "category": "Safety Policy Filtering",
+    "expected_layer": "SAFETY",
+    "trials": 20,
+    "go_v2": {
+      "detected": 20,
+      "correct_attr": 20,
+      "wrong_attr": 0,
+      "latency_ms": 45.0,
+      "tokens": 363.0,
+      "status": "100% Attribution (20/20)"
+    },
+    "python_ref": {
+      "detected": 20,
+      "correct_attr": 20,
+      "wrong_attr": 0,
+      "latency_ms": 45.0,
+      "tokens": 80.0,
+      "status": "100% Attribution (20/20)"
+    },
+    "observable_evidence": [
+      "REF-E1: refusal detected; finish reason shifted, expected contains_all changed",
+      "REF-E2: refusal detected; finish reason shifted, expected contains_any changed",
+      "safety_001: refusal detected; finish reason shifted, expected not_refused changed",
+      "Benign Refusal Rate Denominator: 4 eligible benign probes (safety_001, safety_002, REF-E1, REF-E2)",
+      "Deterministic schedule refused 3 of 4 probes -> 75.0% Category Refusal Rate (3/4)",
+      "Global fixture refusal rate: 3/16 = 18.75%",
+      "Overall accuracy degraded by 18.8% (p=0.034, Cohen's h=0.90) solely due to refusals"
+    ],
+    "notes": "Refusals on borderline benign inputs triggered by safety filter over-triggering. Refusal rate denominator reconciled across category (75%) vs global fixture (18.75%)."
+  },
+  {
+    "id": "EXP-04",
+    "name": "Request Configuration Mutation (14-Token Truncation)",
+    "category": "Client Configuration",
+    "expected_layer": "REQUEST_CONFIG",
+    "trials": 20,
+    "go_v2": {
+      "detected": 20,
+      "correct_attr": 20,
+      "wrong_attr": 0,
+      "latency_ms": 45.0,
+      "tokens": 369.0,
+      "status": "100% Attribution (20/20, Fixed from V1)"
+    },
+    "python_ref": {
+      "detected": 20,
+      "correct_attr": 20,
+      "wrong_attr": 0,
+      "latency_ms": 45.0,
+      "tokens": 86.0,
+      "status": "100% Attribution (20/20)"
+    },
+    "observable_evidence": [
+      "Finish reason inspection: FinishReason == 'length' across truncated tasks",
+      "Output token ceiling clustering: multiple responses capping tightly at 14 tokens",
+      "Syntax truncation indicators: incomplete JSON braces, missing quotes, or missing end sentinels",
+      "TRN-E1: finish reason length (truncated), missing end sentinel <<END>>",
+      "instruct_002: finish reason length (truncated), missing expected 1-2-3-4-5 items",
+      "json_002: finish reason length (truncated), incomplete JSON syntax",
+      "Go V2 attribution fix: eliminated Go V1 misattribution to MODEL (which had 0/20 in V1)"
+    ],
+    "notes": "Go V1 misattributed EXP-04 as MODEL (0/20) due to rigid task ID prefix matching. Go V2 uses observable evidence to reach 20/20 (100.0%) correct attribution."
+  }
+],
+};
+
+export interface ComparativeMatrixDimension {
+  dimension: string;
+  metric: string;
+  go_v1: string;
+  go_v2: string;
+  python_ref: string;
+  highlight?: boolean;
+}
+
+export const COMPARATIVE_MATRIX: ComparativeMatrixDimension[] = [
+  {
+    dimension: 'Detection Accuracy',
+    metric: 'Precision',
+    go_v1: '100.0% (80/80)',
+    go_v2: '100.0% (80/80)',
+    python_ref: '100.0% (80/80)',
+  },
+  {
+    dimension: 'Detection Accuracy',
+    metric: 'Recall',
+    go_v1: '100.0% (80/80)',
+    go_v2: '100.0% (80/80)',
+    python_ref: '100.0% (80/80)',
+  },
+  {
+    dimension: 'Detection Accuracy',
+    metric: 'F1 Score',
+    go_v1: '1.0000',
+    go_v2: '1.0000',
+    python_ref: '1.0000',
+  },
+  {
+    dimension: 'Detection Accuracy',
+    metric: 'Detection Rate',
+    go_v1: '100.0%',
+    go_v2: '100.0%',
+    python_ref: '100.0%',
+  },
+  {
+    dimension: 'Detection Accuracy',
+    metric: 'False Positive Rate (FPR)',
+    go_v1: '0.0% (0/20)',
+    go_v2: '0.0% (0/20)',
+    python_ref: '0.0% (0/20)',
+  },
+  {
+    dimension: 'Detection Accuracy',
+    metric: 'False Negative Rate (FNR)',
+    go_v1: '0.0% (0/80)',
+    go_v2: '0.0% (0/80)',
+    python_ref: '0.0% (0/80)',
+  },
+  {
+    dimension: 'Root-Cause Attribution',
+    metric: 'Attribution Accuracy (on TP)',
+    go_v1: '75.0% (60/80)',
+    go_v2: '100.0% (80/80)',
+    python_ref: '100.0% (80/80)',
+    highlight: true,
+  },
+  {
+    dimension: 'Root-Cause Attribution',
+    metric: 'Wrong Attribution Count',
+    go_v1: '20 (EXP-04 -> MODEL)',
+    go_v2: '0',
+    python_ref: '0',
+    highlight: true,
+  },
+  {
+    dimension: 'Root-Cause Attribution',
+    metric: 'Inconclusive Attribution',
+    go_v1: '0',
+    go_v2: '0',
+    python_ref: '0',
+  },
+  {
+    dimension: 'Serving Telemetry',
+    metric: 'Intrinsic Model Generation Throughput',
+    go_v1: '~45-55 tok/s',
+    go_v2: '~45-55 tok/s',
+    python_ref: '~45-55 tok/s',
+  },
+  {
+    dimension: 'Serving Telemetry',
+    metric: 'Effective End-to-End Throughput (EXP-02)',
+    go_v1: '~1.4 tok/s',
+    go_v2: '~1.4 tok/s',
+    python_ref: '~1.4 tok/s',
+    highlight: true,
+  },
+];
+
+export const SERVING_TELEMETRY_EXPLANATION = {
+  intrinsic: {
+    title: 'Intrinsic Model Generation Speed',
+    speed: '45.0 - 55.0 tok/s',
+    formula: 'Tokens / T_decode',
+    description:
+      'Measures raw token generation speed strictly over active model decoding time on the local testbed. Constant across baseline and network queue mutations.',
+  },
+  effective_baseline: {
+    title: 'Effective E2E Delivery (EXP-00 Baseline)',
+    speed: '~50.0 tok/s',
+    latency: '~120ms total roundtrip',
+    tokens: '~6-8 tokens',
+    description:
+      'Tokens delivered per unit of total roundtrip time under zero network or queue obstruction.',
+  },
+  effective_exp02: {
+    title: 'Effective E2E Delivery (EXP-02 Serving Mutation)',
+    speed: '~1.4 tok/s',
+    latency: '~1320ms total roundtrip (+1200ms queue)',
+    tokens: '~6-8 tokens',
+    description:
+      'A drop in effective throughput from 50 tok/s to 1.4 tok/s while intrinsic generation speed remains 50 tok/s cleanly isolates upstream serving queue buildup from GPU model degradation.',
+  },
+};

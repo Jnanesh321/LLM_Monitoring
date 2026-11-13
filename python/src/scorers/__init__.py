@@ -6,13 +6,18 @@ from src.scorers.exact_match import ExactMatchScorer
 from src.scorers.numerical import NumericalScorer
 from src.scorers.json_validator import JSONValidatorScorer
 from src.scorers.refusal import SafetyRefusalScorer
+from src.scorers.constraint_checker import ConstraintCheckScorer
+from src.scorers.unit_tests import UnitTestScorer
 
 _SCORER_REGISTRY: Dict[str, Type[BaseScorer]] = {
     "exact_match": ExactMatchScorer,
     "numerical": NumericalScorer,
+    "numeric_tolerance": NumericalScorer,
     "json_schema": JSONValidatorScorer,
     "json_exact": JSONValidatorScorer,
     "safety_refusal": SafetyRefusalScorer,
+    "constraint_check": ConstraintCheckScorer,
+    "unit_tests": UnitTestScorer,
 }
 
 

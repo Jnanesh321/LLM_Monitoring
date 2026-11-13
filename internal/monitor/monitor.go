@@ -37,11 +37,16 @@ type Config struct {
 	DataDir       string        `json:"data_dir"`
 	Concurrency   int           `json:"concurrency"`
 	Mock          bool          `json:"mock"`
+	Profile       string        `json:"profile"`
+	Tier          string        `json:"tier"`
+	Seed          int64         `json:"seed"`
+	Trials        int           `json:"trials"`
+	Quiet         bool          `json:"quiet"`
 }
 
 func DefaultConfig() Config {
 	return Config{LocalEndpoint: "http://127.0.0.1:11434/api/chat",
-		ModelA: "qwen2.5:3b-instruct-fp16", ModelB: "qwen2.5:3b-instruct-q8_0", ModelC: "qwen2.5:3b-instruct-q4_K_M",
+		ModelA: "qwen2.5:1.5b-instruct-q8_0", ModelB: "qwen2.5:1.5b", ModelC: "qwen2.5:1.5b-instruct-fp16",
 		Interval: 15 * time.Minute, IntervalText: "15m", SystemPrompt: "Answer the synthetic canary precisely.",
 		Temperature: 0.2, MaxTokens: 256, DataDir: "data", Concurrency: 1}
 }
@@ -86,8 +91,22 @@ type Layers struct {
 	ResponseFormat string  `json:"response_format,omitempty"`
 	LatencyMS      int     `json:"latency_ms,omitempty"`
 	JitterMS       int     `json:"jitter_ms,omitempty"`
-	Noise          float64 `json:"noise,omitempty"`
-	Quantization   string  `json:"quantization,omitempty"`
+	Noise          float64       `json:"noise,omitempty"`
+	Quantization   string        `json:"quantization,omitempty"`
+	App            RequestConfig `json:"app,omitempty"`
+}
+
+type RequestConfig struct {
+	Temperature    *float64 `json:"temperature,omitempty"`
+	MaxTokens      *int     `json:"max_tokens,omitempty"`
+	SystemPrompt   *string  `json:"system_prompt,omitempty"`
+	ResponseFormat string   `json:"response_format,omitempty"`
+}
+
+func (r RequestConfig) Hash() string {
+	data, _ := json.Marshal(r)
+	sum := sha256.Sum256(data)
+	return hex.EncodeToString(sum[:])
 }
 
 func healthyLayers(c Config) Layers {
@@ -627,8 +646,9 @@ func checkTask(task canary.Task, response Response) []CheckObservation {
 }
 
 func isRefusal(text string) bool {
-	for _, phrase := range []string{"i can't", "i cannot", "i'm unable", "i won't", "can't help"} {
-		if strings.Contains(text, phrase) {
+	lower := strings.ToLower(text)
+	for _, phrase := range []string{"i can't", "i cannot", "i'm unable", "i won't", "can't help", "cannot assist", "sensitive domain"} {
+		if strings.Contains(lower, phrase) {
 			return true
 		}
 	}
@@ -654,7 +674,11 @@ func Compare(reference, current []Observation) (changed bool, confidence float64
 		}
 		if observation.FinishReason != previous.FinishReason {
 			differences++
-			evidence = append(evidence, observation.CanaryID+": finish reason changed")
+			if observation.FinishReason == "length" {
+				evidence = append(evidence, observation.CanaryID+": finish reason length (truncated)")
+			} else {
+				evidence = append(evidence, observation.CanaryID+": finish reason changed")
+			}
 		}
 		if previous.LatencyMS > 0 && observation.LatencyMS > previous.LatencyMS*2 {
 			differences++
@@ -665,7 +689,20 @@ func Compare(reference, current []Observation) (changed bool, confidence float64
 				continue
 			}
 			differences += 2
-			evidence = append(evidence, observation.CanaryID+": expected "+check.Expected+" check changed")
+			detail := ""
+			if !check.Passed {
+				if check.Type == "json_valid" {
+					detail = " (incomplete JSON syntax)"
+				} else if check.Type == "ends_with" {
+					detail = " (missing end sentinel)"
+				}
+			}
+			evidence = append(evidence, observation.CanaryID+": expected "+check.Expected+" check changed"+detail)
+		}
+		if (isRefusal(observation.Response) || observation.FinishReason == "content_filter") &&
+			!isRefusal(previous.Response) && previous.FinishReason != "content_filter" {
+			differences += 2
+			evidence = append(evidence, observation.CanaryID+": refusal detected")
 		}
 	}
 	if comparable == 0 {
@@ -685,23 +722,139 @@ type Analysis struct {
 func Analyze(reference, current []Observation) Analysis {
 	changed, confidence, evidence := Compare(reference, current)
 	return Analysis{Detected: changed, Confidence: confidence,
-		PredictedLayer: attribute(evidence), Evidence: evidence}
+		PredictedLayer: attributeDetailed(reference, current, evidence), Evidence: evidence}
+}
+
+func attributeDetailed(reference, current []Observation, evidence []string) string {
+	if len(evidence) == 0 {
+		return "unknown"
+	}
+
+	baseMap := make(map[string]Observation, len(reference))
+	for _, r := range reference {
+		baseMap[r.CanaryID] = r
+	}
+
+	truncationCount := 0
+	refusalCount := 0
+	latencyCount := 0
+	modelDropCount := 0
+
+	// Check token ceiling clustering across current observations
+	tokenCounts := make(map[int]int)
+	for _, cur := range current {
+		if cur.OutputTokens > 0 {
+			tokenCounts[cur.OutputTokens]++
+		}
+	}
+	clusteredCeiling := 0
+	for count, freq := range tokenCounts {
+		if count > 0 && count <= 32 && freq >= 2 {
+			clusteredCeiling = count
+			break
+		}
+	}
+
+	for _, cur := range current {
+		base, exists := baseMap[cur.CanaryID]
+		if !exists {
+			continue
+		}
+
+		// 1. Truncation / Request Config behavioural evidence:
+		// - FinishReason == "length"
+		// - Incomplete JSON syntax (unclosed curly brace or quotes)
+		// - Missing end sentinel (e.g. check "ends_with" failed or ending token cut off)
+		// - Capped at low token ceiling while baseline was substantially longer
+		isTruncated := false
+		if cur.FinishReason == "length" {
+			isTruncated = true
+		}
+		if clusteredCeiling > 0 && cur.OutputTokens == clusteredCeiling && base.OutputTokens > clusteredCeiling+4 {
+			isTruncated = true
+		}
+		for _, chk := range cur.Checks {
+			if !chk.Passed {
+				if chk.Type == "finish_reason" && chk.Expected == "stop" {
+					isTruncated = true
+				}
+				if chk.Type == "ends_with" {
+					isTruncated = true
+				}
+				if chk.Type == "json_valid" && strings.HasPrefix(strings.TrimSpace(cur.Response), "{") && !strings.HasSuffix(strings.TrimSpace(cur.Response), "}") {
+					isTruncated = true
+				}
+			}
+		}
+		if isTruncated {
+			truncationCount++
+		}
+
+		// 2. Safety Refusal evidence
+		if (isRefusal(cur.Response) || cur.FinishReason == "content_filter") && !isRefusal(base.Response) && base.FinishReason != "content_filter" {
+			refusalCount++
+		}
+
+		// 3. Latency evidence
+		if base.LatencyMS > 0 && cur.LatencyMS > base.LatencyMS*2 {
+			latencyCount++
+		}
+
+		// 4. Model capability evidence
+		// Only count as model capability drop if response completed with stop, was not refused, and was not truncated
+		if !isTruncated && !isRefusal(cur.Response) && cur.FinishReason != "content_filter" {
+			checksFailed := false
+			for i, chk := range cur.Checks {
+				if i < len(base.Checks) && base.Checks[i].Passed && !chk.Passed {
+					checksFailed = true
+					break
+				}
+			}
+			if checksFailed || (strings.TrimSpace(base.Response) != strings.TrimSpace(cur.Response) && cur.FinishReason == "stop") {
+				modelDropCount++
+			}
+		}
+	}
+
+	// Decision logic using behavioural evidence:
+	if truncationCount >= 2 || (truncationCount >= 1 && modelDropCount == 0 && refusalCount == 0) {
+		return "request_config"
+	}
+	if refusalCount > modelDropCount && refusalCount > 0 {
+		return "safety"
+	}
+	if latencyCount > modelDropCount+truncationCount+refusalCount && latencyCount > 0 {
+		return "serving"
+	}
+	if modelDropCount > 0 || len(evidence) >= 3 {
+		return "model"
+	}
+
+	return attribute(evidence)
 }
 
 func attribute(evidence []string) string {
 	if len(evidence) == 0 {
 		return "unknown"
 	}
-	refusal, config, latency := 0, 0, 0
+	refusal, config, latency, modelErrors := 0, 0, 0, 0
 	for _, item := range evidence {
+		lower := strings.ToLower(item)
 		switch {
-		case strings.HasPrefix(item, "REF-"):
+		case strings.Contains(lower, "refusal") || strings.Contains(lower, "content_filter") || strings.HasPrefix(item, "REF-"):
 			refusal++
-		case strings.HasPrefix(item, "FMT-") || strings.HasPrefix(item, "INS-"):
+		case strings.Contains(lower, "length") || strings.Contains(lower, "truncated") ||
+			strings.Contains(lower, "incomplete json") || strings.Contains(lower, "missing end sentinel") ||
+			strings.HasPrefix(item, "TRN-") || strings.HasPrefix(item, "FMT-") || strings.HasPrefix(item, "INS-"):
 			config++
-		case strings.HasSuffix(item, "latency increased"):
+		case strings.Contains(lower, "latency increased"):
 			latency++
+		default:
+			modelErrors++
 		}
+	}
+	if config > 0 && config >= modelErrors {
+		return "request_config"
 	}
 	if latency > refusal+config && latency > 0 {
 		return "serving"
