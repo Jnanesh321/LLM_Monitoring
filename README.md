@@ -95,29 +95,48 @@ To validate detection and attribution efficacy, the system executes four control
 
 ## 5. Repository Structure
 
+The repository contains two complementary implementations designed for cross-verification:
+1. **Go Implementation (Root):** High-throughput, concurrency-safe CLI and background monitor.
+2. **Python Implementation (`python/`):** Statistical analysis, research benchmarks, and Ollama multi-precision fault-injection validation harness.
+
 ```text
 LLM_Monitoring/
-├── README.md               # Project overview and current status
+├── README.md               # Main project overview and dual-runtime quickstart
 ├── ARCHITECTURE.md         # Detailed 4-layer architecture and component specs
 ├── REQUIREMENTS.md         # Functional, non-functional, and verification requirements
-├── IMPLEMENTATION_PLAN.md  # 36-hour hackathon roadmap across 6 milestones
-├── EVALUATION.md           # Benchmark methodology, drift math, and attribution matrix
-├── CONTRIBUTING.md         # Development guidelines and probe contribution specs
+├── IMPLEMENTATION_PLAN.md  # Hackathon roadmap and milestones
+├── EVALUATION.md           # Benchmark methodology, statistical tests, and attribution matrix
+├── CONTRIBUTING.md         # Development guidelines
 ├── HARDWARE.md             # Workstation profile, VRAM feasibility, and guardrails
-├── configs/                # Configuration files for benchmark runs and mock mutations
-├── evaluation/             # Synthetic test datasets and prompt suites
-│   └── benchmarks/
-│       └── smoke_benchmark.json
-├── src/                    # Core source code
-│   ├── runner/             # Model runners (Ollama, mock proxy, llama.cpp)
-│   ├── scorers/            # Deterministic answer extractors and validators
-│   ├── proxy/              # Mock AI Provider with controlled layer fault injection
-│   ├── detector/           # Statistical drift detection algorithms
-│   ├── attribution/        # 4-layer root-cause diagnostic engine
-│   └── benchmark.py        # Benchmark orchestration engine
-├── results/                # Timestamped execution outputs and audit JSONs
-├── tests/                  # Unit tests for scorers, runners, and detector
-└── run_benchmark.py        # CLI entry point for benchmark execution
+├── .gitignore              # Repository git ignore rules
+├── go.mod                  # Go module definition (Root Go Implementation)
+├── cmd/
+│   └── model-monitor/      # Go CLI application entry point
+├── internal/
+│   ├── canary/             # Go canary evaluation and checks
+│   ├── evalspec/           # Go evaluation scenario specifications
+│   ├── monitor/            # Go monitoring, mock provider, detector & attribution
+│   └── report/             # Go reporting and presentation
+├── data/                   # Go evaluation baseline JSON artifacts
+├── docs/                   # Go developer documentation
+├── canaries_fixed.json     # Go canary suite definitions
+├── problem3_test_cases.json # Go problem test cases
+└── python/                 # Python Implementation
+    ├── requirements.txt    # Python dependencies
+    ├── run_benchmark.py    # Python benchmark CLI runner
+    ├── run_comparison.py   # Multi-precision comparative runner (FP16 vs Q8 vs Q4)
+    ├── run_experiments.py  # 5-experiment controlled layer fault-injection & attribution suite
+    ├── src/
+    │   ├── runner/         # Model runners (Ollama API client with VRAM unload)
+    │   ├── scorers/        # Deterministic scorers (ExactMatch, Numerical, JSON, Refusal)
+    │   ├── proxy/          # Mock AI Provider for 4-layer fault injection
+    │   ├── detector/       # Statistical drift detector (z-test, Cohen's h, token clustering)
+    │   ├── attribution/    # 4-layer root cause attribution engine
+    │   ├── telemetry/      # GPU VRAM & system RAM tracking
+    │   └── validation/     # Controlled experiment test harness
+    ├── evaluation/         # Synthetic canary datasets (canary_suite.json, smoke_benchmark.json)
+    ├── results/            # Timestamped JSON execution logs and validation reports
+    └── tests/              # Full Python unit test suite
 ```
 
 ---
@@ -126,20 +145,36 @@ LLM_Monitoring/
 
 ### Prerequisites
 * Windows 11 or Linux
+* Go 1.23+
 * Python 3.10+
-* Ollama installed locally with `qwen2.5:1.5b` pulled (`ollama pull qwen2.5:1.5b`)
+* Ollama installed locally with target models:
+  - `qwen2.5:1.5b-instruct-q8_0`
+  - `qwen2.5:1.5b` (Q4_K_M)
+  - `qwen2.5:1.5b-instruct-fp16`
 
-### Running the Benchmark
+### Running the Go Implementation
 ```bash
-# Clone the repository
-git clone https://github.com/Jnanesh321/LLM_Monitoring.git
-cd LLM_Monitoring
+# Run Go unit tests
+go test ./...
 
-# Run unit tests
-python -m unittest discover -s tests
+# Build Go CLI binary
+go build -o model-monitor.exe ./cmd/model-monitor
 
-# Execute benchmark against local Ollama model
-python run_benchmark.py --model qwen2.5:1.5b --temperature 0.0 --seed 42
+# Run Go monitor CLI
+./model-monitor.exe evaluate
+```
+
+### Running the Python Implementation
+```bash
+# Run Python unit tests
+cd python
+python -m unittest discover tests
+
+# Run 5-experiment controlled fault-injection validation suite (Baseline, Model, Serving, Safety, Request)
+python run_experiments.py --experiments all
+
+# Run multi-precision comparison (FP16 vs Q8 vs Q4)
+python run_comparison.py
 ```
 
 ---
