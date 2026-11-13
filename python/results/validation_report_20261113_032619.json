@@ -1,0 +1,67 @@
+{
+  "title": "PS-03 Controlled Layer Experiment Validation Report",
+  "timestamp_utc": "20261113_032619",
+  "dataset": "evaluation/benchmarks/canary_suite.json",
+  "base_model": "qwen2.5:1.5b-instruct-q8_0",
+  "summary_metrics": {
+    "total_experiments": 2,
+    "total_fault_injections": 1,
+    "null_controls": 1,
+    "true_positives": 1,
+    "false_positives": 0,
+    "true_negatives": 1,
+    "false_negatives": 0,
+    "detection_accuracy_percent": 100.0,
+    "false_positive_rate_percent": 0.0,
+    "missed_change_rate_percent": 0.0,
+    "attribution_accuracy_percent": 100.0,
+    "avg_detection_latency_sec": 35.62,
+    "total_suite_runtime_sec": 107.7
+  },
+  "experiments": [
+    {
+      "experiment_id": "EXP-00-BASELINE-CONTROL",
+      "target_layer": "baseline",
+      "expected_layer": "NO_DRIFT",
+      "attributed_layer": "NO_DRIFT",
+      "attribution_correct": true,
+      "confidence": 0.95,
+      "drift_detected": false,
+      "severity": "NONE",
+      "accuracy_delta": 0.0,
+      "latency_change_pct": -0.8442687866857048,
+      "refusal_delta": 0.0,
+      "truncation_detected": false,
+      "detection_latency_sec": 36.09,
+      "evidence": [
+        "Overall accuracy delta: +0.0% (p=0.500)",
+        "Latency change: -0.8%",
+        "Refusal rate delta: +0.00"
+      ],
+      "inferred_diagnosis": "System performance remains fully consistent with the established baseline within normal stochastic variation bounds."
+    },
+    {
+      "experiment_id": "EXP-04-REQUEST-TRUNCATE",
+      "target_layer": "request",
+      "expected_layer": "REQUEST_CONFIGURATION",
+      "attributed_layer": "REQUEST_CONFIGURATION",
+      "attribution_correct": true,
+      "confidence": 0.9,
+      "drift_detected": true,
+      "severity": "CRITICAL",
+      "accuracy_delta": 8.333333333333314,
+      "latency_change_pct": -3.8969749561381786,
+      "refusal_delta": 0.0,
+      "truncation_detected": true,
+      "detection_latency_sec": 35.16,
+      "evidence": [
+        "Overall accuracy degraded by 8.3% (p=0.269, Cohen's h=0.26)",
+        "Capability regressions localized to: structured_json (+50.0%)",
+        "Provider telemetry reported done_reason='length' on 4 tasks (json_001, json_002, safety_001)",
+        "Observable token ceiling clustering at 14 tokens across 4 tasks (baseline required avg 31.0 tokens; 4 completions cut off mid-syntax)",
+        "JSON syntax parse validity dropped by 100.0%"
+      ],
+      "inferred_diagnosis": "Diagnostic evidence indicates a request configuration parameter mismatch. Completions were abruptly terminated at a low token limit, breaking JSON syntax and cutting off responses mid-sentence."
+    }
+  ]
+}

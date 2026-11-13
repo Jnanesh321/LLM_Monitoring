@@ -1,0 +1,5 @@
+# Core dependencies for benchmark runner and deterministic scorers
+requests>=2.28.0
+jsonschema>=4.17.0
+pytest>=7.0.0
+

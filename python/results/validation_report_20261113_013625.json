@@ -1,0 +1,125 @@
+{
+  "title": "PS-03 Controlled Layer Experiment Validation Report",
+  "timestamp_utc": "20261113_013625",
+  "dataset": "evaluation/benchmarks/canary_suite.json",
+  "base_model": "qwen2.5:1.5b-instruct-q8_0",
+  "summary_metrics": {
+    "total_experiments": 5,
+    "total_fault_injections": 4,
+    "null_controls": 1,
+    "true_positives": 4,
+    "false_positives": 0,
+    "true_negatives": 1,
+    "false_negatives": 0,
+    "detection_accuracy_percent": 100.0,
+    "false_positive_rate_percent": 0.0,
+    "missed_change_rate_percent": 0.0,
+    "attribution_accuracy_percent": 75.0,
+    "avg_detection_latency_sec": 38.04,
+    "total_suite_runtime_sec": 226.43
+  },
+  "experiments": [
+    {
+      "experiment_id": "EXP-00-BASELINE-CONTROL",
+      "target_layer": "baseline",
+      "expected_layer": "NO_DRIFT",
+      "attributed_layer": "NO_DRIFT",
+      "attribution_correct": true,
+      "confidence": 0.95,
+      "drift_detected": false,
+      "severity": "NONE",
+      "accuracy_delta": 0.0,
+      "latency_change_pct": -0.4444731965157501,
+      "refusal_delta": 0.0,
+      "truncation_detected": false,
+      "detection_latency_sec": 36.1,
+      "evidence": [
+        "Overall accuracy delta: +0.0% (p=0.500)",
+        "Latency change: -0.4%",
+        "Refusal rate delta: +0.00"
+      ],
+      "inferred_diagnosis": "System performance remains fully consistent with the established baseline within normal stochastic variation bounds."
+    },
+    {
+      "experiment_id": "EXP-01-MODEL-QUANT",
+      "target_layer": "model",
+      "expected_layer": "MODEL_LAYER",
+      "attributed_layer": "MODEL_LAYER",
+      "attribution_correct": true,
+      "confidence": 0.85,
+      "drift_detected": true,
+      "severity": "MODERATE",
+      "accuracy_delta": 16.666666666666657,
+      "latency_change_pct": -3.085816053549893,
+      "refusal_delta": 0.0,
+      "truncation_detected": false,
+      "detection_latency_sec": 37.34,
+      "evidence": [
+        "Overall accuracy degraded by 16.7% (p=0.137, Cohen's h=0.46)",
+        "Capability regressions localized to: structured_json (+50.0%), mathematics (+33.3%)"
+      ],
+      "inferred_diagnosis": "Diagnostic evidence indicates an underlying model or quantization checkpoint change. Performance regressions are concentrated in precision-sensitive reasoning (mathematics and logic) without serving latency degradation."
+    },
+    {
+      "experiment_id": "EXP-02-SERVING-LATENCY",
+      "target_layer": "serving",
+      "expected_layer": "SERVING_STACK",
+      "attributed_layer": "SERVING_STACK",
+      "attribution_correct": true,
+      "confidence": 0.88,
+      "drift_detected": true,
+      "severity": "MODERATE",
+      "accuracy_delta": 0.0,
+      "latency_change_pct": 99.37629146482081,
+      "refusal_delta": 0.0,
+      "truncation_detected": false,
+      "detection_latency_sec": 51.25,
+      "evidence": [
+        "Generation latency shifted by +99.4% (+2611ms)"
+      ],
+      "inferred_diagnosis": "Diagnostic evidence isolates this drift to the serving infrastructure layer. Generation latency and TTFT experienced significant regression while task accuracy across all capabilities remained invariant."
+    },
+    {
+      "experiment_id": "EXP-03-SAFETY-REFUSAL",
+      "target_layer": "safety",
+      "expected_layer": "SAFETY_SETTINGS",
+      "attributed_layer": "SAFETY_SETTINGS",
+      "attribution_correct": true,
+      "confidence": 0.92,
+      "drift_detected": true,
+      "severity": "CRITICAL",
+      "accuracy_delta": 16.666666666666657,
+      "latency_change_pct": -17.480582838311463,
+      "refusal_delta": 1.0,
+      "truncation_detected": false,
+      "detection_latency_sec": 30.51,
+      "evidence": [
+        "Overall accuracy degraded by 16.7% (p=0.137, Cohen's h=0.46)",
+        "Capability regressions localized to: safety (+100.0%)",
+        "Refusal rate on benign safety/domain probes increased by +100.0%"
+      ],
+      "inferred_diagnosis": "Diagnostic evidence strongly indicates an upstream safety filter or moderation guardrail update. Benign prompts containing domain vocabulary triggered unexpected refusal templates without general reasoning degradation."
+    },
+    {
+      "experiment_id": "EXP-04-REQUEST-TRUNCATE",
+      "target_layer": "request",
+      "expected_layer": "REQUEST_CONFIGURATION",
+      "attributed_layer": "UNCORRELATED_DRIFT",
+      "attribution_correct": false,
+      "confidence": 0.6,
+      "drift_detected": true,
+      "severity": "MINOR",
+      "accuracy_delta": 8.333333333333314,
+      "latency_change_pct": -3.9880814207920503,
+      "refusal_delta": 0.0,
+      "truncation_detected": false,
+      "detection_latency_sec": 34.99,
+      "evidence": [
+        "Overall accuracy degraded by 8.3% (p=0.269, Cohen's h=0.26)",
+        "Capability regressions localized to: structured_json (+50.0%)",
+        "JSON syntax parse validity dropped by 100.0%"
+      ],
+      "inferred_diagnosis": "Multiple weak signals detected across latency and accuracy; unable to attribute with high confidence to a single layer."
+    }
+  ]
+}

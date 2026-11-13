@@ -1,0 +1,45 @@
+{
+  "title": "PS-03 Controlled Layer Experiment Validation Report",
+  "timestamp_utc": "20261113_021040",
+  "dataset": "evaluation/benchmarks/canary_suite.json",
+  "base_model": "qwen2.5:1.5b-instruct-q8_0",
+  "summary_metrics": {
+    "total_experiments": 1,
+    "total_fault_injections": 1,
+    "null_controls": 0,
+    "true_positives": 1,
+    "false_positives": 0,
+    "true_negatives": 0,
+    "false_negatives": 0,
+    "detection_accuracy_percent": 100.0,
+    "false_positive_rate_percent": 0.0,
+    "missed_change_rate_percent": 0.0,
+    "attribution_accuracy_percent": 100.0,
+    "avg_detection_latency_sec": 32.44,
+    "total_suite_runtime_sec": 67.87
+  },
+  "experiments": [
+    {
+      "experiment_id": "EXP-04-REQUEST-TRUNCATE",
+      "target_layer": "request",
+      "expected_layer": "REQUEST_CONFIGURATION",
+      "attributed_layer": "REQUEST_CONFIGURATION",
+      "attribution_correct": true,
+      "confidence": 0.9,
+      "drift_detected": true,
+      "severity": "CRITICAL",
+      "accuracy_delta": 8.333333333333314,
+      "latency_change_pct": -15.368996170326815,
+      "refusal_delta": 0.0,
+      "truncation_detected": true,
+      "detection_latency_sec": 32.44,
+      "evidence": [
+        "Overall accuracy degraded by 8.3% (p=0.269, Cohen's h=0.26)",
+        "Capability regressions localized to: structured_json (+50.0%)",
+        "Multiple completions truncated prematurely at fixed token boundary with unclosed syntax",
+        "JSON syntax parse validity dropped by 100.0%"
+      ],
+      "inferred_diagnosis": "Diagnostic evidence indicates a request configuration parameter mismatch. Completions were abruptly terminated at a low token limit, breaking JSON syntax and cutting off responses mid-sentence."
+    }
+  ]
+}

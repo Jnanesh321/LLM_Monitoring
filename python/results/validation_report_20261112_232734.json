@@ -1,0 +1,44 @@
+{
+  "title": "PS-03 Controlled Layer Experiment Validation Report",
+  "timestamp_utc": "20261112_232734",
+  "dataset": "evaluation/benchmarks/canary_suite.json",
+  "base_model": "qwen2.5:1.5b-instruct-q8_0",
+  "summary_metrics": {
+    "total_experiments": 1,
+    "total_fault_injections": 1,
+    "null_controls": 0,
+    "true_positives": 0,
+    "false_positives": 0,
+    "true_negatives": 0,
+    "false_negatives": 1,
+    "detection_accuracy_percent": 0.0,
+    "false_positive_rate_percent": 0.0,
+    "missed_change_rate_percent": 100.0,
+    "attribution_accuracy_percent": 0.0,
+    "avg_detection_latency_sec": 37.35,
+    "total_suite_runtime_sec": 71.76
+  },
+  "experiments": [
+    {
+      "experiment_id": "EXP-01-MODEL-QUANT",
+      "target_layer": "model",
+      "expected_layer": "MODEL_LAYER",
+      "attributed_layer": "NO_DRIFT",
+      "attribution_correct": false,
+      "confidence": 0.95,
+      "drift_detected": false,
+      "severity": "NONE",
+      "accuracy_delta": 8.333333333333343,
+      "latency_change_pct": -3.8107713158631915,
+      "refusal_delta": 0.0,
+      "truncation_detected": false,
+      "detection_latency_sec": 37.35,
+      "evidence": [
+        "Overall accuracy delta: +8.3% (p=0.308)",
+        "Latency change: -3.8%",
+        "Refusal rate delta: +0.00"
+      ],
+      "inferred_diagnosis": "System performance remains fully consistent with the established baseline within normal stochastic variation bounds."
+    }
+  ]
+}

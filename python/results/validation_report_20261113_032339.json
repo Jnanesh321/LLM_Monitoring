@@ -1,0 +1,128 @@
+{
+  "title": "PS-03 Controlled Layer Experiment Validation Report",
+  "timestamp_utc": "20261113_032339",
+  "dataset": "evaluation/benchmarks/canary_suite.json",
+  "base_model": "qwen2.5:1.5b-instruct-q8_0",
+  "summary_metrics": {
+    "total_experiments": 5,
+    "total_fault_injections": 4,
+    "null_controls": 1,
+    "true_positives": 4,
+    "false_positives": 1,
+    "true_negatives": 0,
+    "false_negatives": 0,
+    "detection_accuracy_percent": 80.0,
+    "false_positive_rate_percent": 100.0,
+    "missed_change_rate_percent": 0.0,
+    "attribution_accuracy_percent": 50.0,
+    "avg_detection_latency_sec": 38.31,
+    "total_suite_runtime_sec": 228.71
+  },
+  "experiments": [
+    {
+      "experiment_id": "EXP-00-BASELINE-CONTROL",
+      "target_layer": "baseline",
+      "expected_layer": "NO_DRIFT",
+      "attributed_layer": "REQUEST_CONFIGURATION",
+      "attribution_correct": false,
+      "confidence": 0.9,
+      "drift_detected": true,
+      "severity": "CRITICAL",
+      "accuracy_delta": 0.0,
+      "latency_change_pct": -2.9713464075539884,
+      "refusal_delta": 0.0,
+      "truncation_detected": true,
+      "detection_latency_sec": 36.09,
+      "evidence": [
+        "Observable token ceiling clustering at 4 tokens across 2 tasks (baseline required avg 4.0 tokens; 2 completions cut off mid-syntax)"
+      ],
+      "inferred_diagnosis": "Diagnostic evidence indicates a request configuration parameter mismatch. Completions were abruptly terminated at a low token limit, breaking JSON syntax and cutting off responses mid-sentence."
+    },
+    {
+      "experiment_id": "EXP-01-MODEL-QUANT",
+      "target_layer": "model",
+      "expected_layer": "MODEL_LAYER",
+      "attributed_layer": "REQUEST_CONFIGURATION",
+      "attribution_correct": false,
+      "confidence": 0.9,
+      "drift_detected": true,
+      "severity": "CRITICAL",
+      "accuracy_delta": 16.666666666666657,
+      "latency_change_pct": -3.2340908080224122,
+      "refusal_delta": 0.0,
+      "truncation_detected": true,
+      "detection_latency_sec": 38.15,
+      "evidence": [
+        "Overall accuracy degraded by 16.7% (p=0.137, Cohen's h=0.46)",
+        "Capability regressions localized to: structured_json (+50.0%), mathematics (+33.3%)",
+        "Observable token ceiling clustering at 4 tokens across 2 tasks (baseline required avg 4.0 tokens; 2 completions cut off mid-syntax)"
+      ],
+      "inferred_diagnosis": "Diagnostic evidence indicates a request configuration parameter mismatch. Completions were abruptly terminated at a low token limit, breaking JSON syntax and cutting off responses mid-sentence."
+    },
+    {
+      "experiment_id": "EXP-02-SERVING-LATENCY",
+      "target_layer": "serving",
+      "expected_layer": "SERVING_STACK",
+      "attributed_layer": "REQUEST_CONFIGURATION",
+      "attribution_correct": false,
+      "confidence": 0.9,
+      "drift_detected": true,
+      "severity": "CRITICAL",
+      "accuracy_delta": 0.0,
+      "latency_change_pct": 93.42916648137441,
+      "refusal_delta": 0.0,
+      "truncation_detected": true,
+      "detection_latency_sec": 51.16,
+      "evidence": [
+        "Generation latency shifted by +93.4% (+2521ms)",
+        "Observable token ceiling clustering at 4 tokens across 2 tasks (baseline required avg 4.0 tokens; 2 completions cut off mid-syntax)"
+      ],
+      "inferred_diagnosis": "Diagnostic evidence indicates a request configuration parameter mismatch. Completions were abruptly terminated at a low token limit, breaking JSON syntax and cutting off responses mid-sentence."
+    },
+    {
+      "experiment_id": "EXP-03-SAFETY-REFUSAL",
+      "target_layer": "safety",
+      "expected_layer": "SAFETY_SETTINGS",
+      "attributed_layer": "SAFETY_SETTINGS",
+      "attribution_correct": true,
+      "confidence": 0.92,
+      "drift_detected": true,
+      "severity": "CRITICAL",
+      "accuracy_delta": 16.666666666666657,
+      "latency_change_pct": -18.76417485658381,
+      "refusal_delta": 1.0,
+      "truncation_detected": true,
+      "detection_latency_sec": 30.77,
+      "evidence": [
+        "Overall accuracy degraded by 16.7% (p=0.137, Cohen's h=0.46)",
+        "Capability regressions localized to: safety (+100.0%)",
+        "Refusal rate on benign safety/domain probes increased by +100.0%",
+        "Observable token ceiling clustering at 12 tokens across 2 tasks (baseline required avg 41.0 tokens; 0 completions cut off mid-syntax)"
+      ],
+      "inferred_diagnosis": "Diagnostic evidence strongly indicates an upstream safety filter or moderation guardrail update. Benign prompts containing domain vocabulary triggered unexpected refusal templates without general reasoning degradation."
+    },
+    {
+      "experiment_id": "EXP-04-REQUEST-TRUNCATE",
+      "target_layer": "request",
+      "expected_layer": "REQUEST_CONFIGURATION",
+      "attributed_layer": "REQUEST_CONFIGURATION",
+      "attribution_correct": true,
+      "confidence": 0.9,
+      "drift_detected": true,
+      "severity": "CRITICAL",
+      "accuracy_delta": 8.333333333333314,
+      "latency_change_pct": -5.379033812128493,
+      "refusal_delta": 0.0,
+      "truncation_detected": true,
+      "detection_latency_sec": 35.4,
+      "evidence": [
+        "Overall accuracy degraded by 8.3% (p=0.269, Cohen's h=0.26)",
+        "Capability regressions localized to: structured_json (+50.0%)",
+        "Provider telemetry reported done_reason='length' on 4 tasks (json_001, json_002, safety_001)",
+        "Observable token ceiling clustering at 14 tokens across 4 tasks (baseline required avg 31.0 tokens; 4 completions cut off mid-syntax)",
+        "JSON syntax parse validity dropped by 100.0%"
+      ],
+      "inferred_diagnosis": "Diagnostic evidence indicates a request configuration parameter mismatch. Completions were abruptly terminated at a low token limit, breaking JSON syntax and cutting off responses mid-sentence."
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "title": "PS-03 Controlled Layer Experiment Validation Report",
+  "timestamp_utc": "20261113_012849",
+  "dataset": "evaluation/benchmarks/canary_suite.json",
+  "base_model": "qwen2.5:1.5b-instruct-q8_0",
+  "summary_metrics": {
+    "total_experiments": 2,
+    "total_fault_injections": 1,
+    "null_controls": 1,
+    "true_positives": 1,
+    "false_positives": 0,
+    "true_negatives": 1,
+    "false_negatives": 0,
+    "detection_accuracy_percent": 100.0,
+    "false_positive_rate_percent": 0.0,
+    "missed_change_rate_percent": 0.0,
+    "attribution_accuracy_percent": 100.0,
+    "avg_detection_latency_sec": 37.13,
+    "total_suite_runtime_sec": 111.7
+  },
+  "experiments": [
+    {
+      "experiment_id": "EXP-00-BASELINE-CONTROL",
+      "target_layer": "baseline",
+      "expected_layer": "NO_DRIFT",
+      "attributed_layer": "NO_DRIFT",
+      "attribution_correct": true,
+      "confidence": 0.95,
+      "drift_detected": false,
+      "severity": "NONE",
+      "accuracy_delta": 0.0,
+      "latency_change_pct": -2.7753025434727125,
+      "refusal_delta": 0.0,
+      "truncation_detected": false,
+      "detection_latency_sec": 36.22,
+      "evidence": [
+        "Overall accuracy delta: +0.0% (p=0.500)",
+        "Latency change: -2.8%",
+        "Refusal rate delta: +0.00"
+      ],
+      "inferred_diagnosis": "System performance remains fully consistent with the established baseline within normal stochastic variation bounds."
+    },
+    {
+      "experiment_id": "EXP-01-MODEL-QUANT",
+      "target_layer": "model",
+      "expected_layer": "MODEL_LAYER",
+      "attributed_layer": "MODEL_LAYER",
+      "attribution_correct": true,
+      "confidence": 0.85,
+      "drift_detected": true,
+      "severity": "MODERATE",
+      "accuracy_delta": 16.666666666666657,
+      "latency_change_pct": -3.6430929870552506,
+      "refusal_delta": 0.0,
+      "truncation_detected": false,
+      "detection_latency_sec": 38.05,
+      "evidence": [
+        "Overall accuracy degraded by 16.7% (p=0.137, Cohen's h=0.46)",
+        "Capability regressions localized to: mathematics (+33.3%), structured_json (+50.0%)"
+      ],
+      "inferred_diagnosis": "Diagnostic evidence indicates an underlying model or quantization checkpoint change. Performance regressions are concentrated in precision-sensitive reasoning (mathematics and logic) without serving latency degradation."
+    }
+  ]
+}

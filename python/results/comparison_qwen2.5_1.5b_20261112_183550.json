@@ -1,0 +1,83 @@
+{
+  "experiment": "Qwen2.5 1.5B Multi-Precision Comparison (FP16 vs Q8 vs Q4)",
+  "timestamp_utc": "20261112_183550",
+  "dataset": "evaluation/benchmarks/smoke_benchmark.json",
+  "hyperparameters": {
+    "temperature": 0.0,
+    "seed": 42,
+    "execution_mode": "Sequential GPU Loading (RTX 3050 4 GB VRAM)"
+  },
+  "availability": {
+    "qwen2.5:1.5b-instruct-fp16": {
+      "installed": false,
+      "target_precision": "FP16 (16-bit unquantized)",
+      "download_size": "2.88 GB (3.09 GB)",
+      "est_vram_mib": 3350.0,
+      "est_ram_gb": 4.5,
+      "notes": "Unquantized weights; fits in 4 GB VRAM under sequential loading with minimal headroom."
+    },
+    "qwen2.5:1.5b-instruct-q8_0": {
+      "installed": false,
+      "target_precision": "Q8_0 (8-bit quantization)",
+      "download_size": "1.53 GB (1.65 GB)",
+      "est_vram_mib": 2100.0,
+      "est_ram_gb": 3.0,
+      "notes": "Near-lossless 8-bit precision; fits comfortably in RTX 3050 4 GB VRAM."
+    },
+    "qwen2.5:1.5b": {
+      "installed": true,
+      "target_precision": "Q4_K_M (4-bit medium k-quant)",
+      "download_size": "986 MB (0.92 GB)",
+      "est_vram_mib": 1350.0,
+      "est_ram_gb": 2.0,
+      "notes": "Standard 4-bit quantization; fully fits in 4 GB VRAM with ~2.5 GB headroom."
+    }
+  },
+  "evaluated_variants": {
+    "qwen2.5:1.5b": {
+      "model_name": "qwen2.5:1.5b",
+      "parameter_size": "1.5B",
+      "quantization_level": "Q4_K_M",
+      "overall_accuracy_percent": 70.0,
+      "passed_tasks": 7,
+      "total_tasks": 10,
+      "avg_latency_ms": 2888.33,
+      "total_prompt_tokens": 585,
+      "total_completion_tokens": 78,
+      "memory": {
+        "peak_gpu_vram_mib": 1193.0,
+        "peak_system_ram_gb": 13.7
+      },
+      "category_breakdown": {
+        "mathematics": {
+          "total": 3,
+          "passed": 2,
+          "accuracy_percent": 66.67
+        },
+        "logical_reasoning": {
+          "total": 2,
+          "passed": 2,
+          "accuracy_percent": 100.0
+        },
+        "instruction_following": {
+          "total": 3,
+          "passed": 3,
+          "accuracy_percent": 100.0
+        },
+        "structured_json": {
+          "total": 2,
+          "passed": 0,
+          "accuracy_percent": 0.0,
+          "json_validity_percent": 100.0,
+          "format_compliance_percent": 0.0,
+          "json_valid_count": 2,
+          "format_compliant_count": 0
+        }
+      }
+    }
+  },
+  "missing_variants": [
+    "qwen2.5:1.5b-instruct-fp16",
+    "qwen2.5:1.5b-instruct-q8_0"
+  ]
+}

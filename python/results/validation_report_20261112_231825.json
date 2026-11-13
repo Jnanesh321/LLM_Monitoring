@@ -1,0 +1,43 @@
+{
+  "title": "PS-03 Controlled Layer Experiment Validation Report",
+  "timestamp_utc": "20261112_231825",
+  "dataset": "evaluation/benchmarks/canary_suite.json",
+  "base_model": "qwen2.5:1.5b-instruct-q8_0",
+  "summary_metrics": {
+    "total_experiments": 1,
+    "total_fault_injections": 0,
+    "null_controls": 1,
+    "true_positives": 0,
+    "false_positives": 1,
+    "true_negatives": 0,
+    "false_negatives": 0,
+    "detection_accuracy_percent": 0.0,
+    "false_positive_rate_percent": 100.0,
+    "missed_change_rate_percent": 0.0,
+    "attribution_accuracy_percent": 0.0,
+    "avg_detection_latency_sec": 33.88,
+    "total_suite_runtime_sec": 68.97
+  },
+  "experiments": [
+    {
+      "experiment_id": "EXP-00-BASELINE-CONTROL",
+      "target_layer": "baseline",
+      "expected_layer": "NO_DRIFT",
+      "attributed_layer": "MODEL_LAYER",
+      "attribution_correct": false,
+      "confidence": 0.85,
+      "drift_detected": true,
+      "severity": "MINOR",
+      "accuracy_delta": 8.333333333333343,
+      "latency_change_pct": -11.342824305787278,
+      "refusal_delta": 0.0,
+      "truncation_detected": false,
+      "detection_latency_sec": 33.88,
+      "evidence": [
+        "Overall accuracy degraded by 8.3% (p=0.308, Cohen's h=0.21)",
+        "Capability regressions localized to: structured_json (+50.0%)"
+      ],
+      "inferred_diagnosis": "Diagnostic evidence indicates an underlying model or quantization checkpoint change. Performance regressions are concentrated in precision-sensitive reasoning and structured formatting without serving latency degradation."
+    }
+  ]
+}
